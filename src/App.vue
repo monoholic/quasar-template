@@ -1,45 +1,35 @@
 <template>
-  <q-layout view="hHh lpR fFf">
-    <q-header elevated>
+  <q-layout view="hHh LpR fFf">
+    <q-header elevated class="bg-primary text-white">
       <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
-        <q-toolbar-title> Vue Template </q-toolbar-title>
-        <!-- <div>Quasar v{{ $q.version }}</div> -->
+        <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
+
+        <q-toolbar-title>
+          <q-avatar>
+            <img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg" />
+          </q-avatar>
+          Title
+        </q-toolbar-title>
       </q-toolbar>
     </q-header>
 
     <q-drawer v-model="leftDrawerOpen" side="left" show-if-above bordered>
-      <q-list>
-        <q-item-label header> Essential Links </q-item-label>
-        <q-expansion-item expand-separator icon="mail" label="Inbox">
-          <q-expansion-item
-            :header-inset-level="1"
-            expand-separator
-            icon="receipt"
-            label="Receipts"
-            default-opened
-            v-on:click="pageMove"
-          >
-          </q-expansion-item>
-        </q-expansion-item>
-      </q-list>
+      <DrawerLayout />
     </q-drawer>
-    <router-view />
+
+    <q-page-container>
+      <router-view />
+    </q-page-container>
   </q-layout>
 </template>
 
 <script setup></script>
 
 <script>
+import DrawerLayout from "./layouts/DrawerLayout.vue";
+
 export default {
-  components: {},
+  components: { DrawerLayout },
   data() {
     return {
       leftDrawerOpen: false,
@@ -51,7 +41,7 @@ export default {
       this.leftDrawerOpen = !this.leftDrawerOpen;
     },
     pageMove() {
-      this.$router.push('/list');
+      this.$router.push("/list");
     },
   },
 };

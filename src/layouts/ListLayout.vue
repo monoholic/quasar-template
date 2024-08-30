@@ -1,5 +1,3 @@
-<template>
-  <q-page-container> ListPage </q-page-container>
-</template>
+<template>ListPage</template>
 
-<script setup></script>
+<script></script>
