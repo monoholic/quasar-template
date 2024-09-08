@@ -22,12 +22,11 @@ export default defineComponent({
 
   methods: {
     join() {
-      let id = "a";
-      let password = "1234";
+      let id = "aa";
+      let password = "12345";
 
       this.$api
-        .post("/join", null, {params: {username: id, password: password}},
-        )
+        .post("/join", null, { params: { userId: id, password: password } })
         .then((res) => {
           if (res.data.code === 200) {
             console.log("res =====> ", res.data.code);
@@ -49,15 +48,14 @@ export default defineComponent({
       let password = "1234";
 
       this.$api
-        .post("/login", null, {params: {username: id, password: password}},
-        )
+        .post("/login", null, { params: { username: id, password: password } })
         .then((res) => {
           if (res.data.code === 200) {
-            localStorage.setItem('token', JSON.stringify(res.data));
+            localStorage.setItem("token", JSON.stringify(res.data));
 
             console.log("res =====> ", res.data.code);
           } else {
-            console.log("err =====> ", res.data.code)
+            console.log("err =====> ", res.data.code);
           }
           this.isLoading = false;
         })
@@ -69,10 +67,9 @@ export default defineComponent({
           console.log("항상 마지막에 실행");
         });
 
-        console.log('======> ',localStorage.getItem('token'));
+      console.log("======> ", localStorage.getItem("token"));
 
-        localStorage.removeItem('token');
-
+      localStorage.removeItem("token");
     },
   },
 });

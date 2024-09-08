@@ -41,7 +41,7 @@ export default {
       this.leftDrawerOpen = !this.leftDrawerOpen;
     },
     pageMove() {
-      this.$router.push("/list");
+      this.$router.push("/login");
     },
   },
 };
