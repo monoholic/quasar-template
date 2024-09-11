@@ -3,9 +3,9 @@
     <div class="comCode">
       <ComCodeGrp></ComCodeGrp>
     </div>
-    <div class="comCode">
+    <!-- <div class="comCode">
       <ComCode></ComCode>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -16,7 +16,7 @@ import ComCode from './ComCode.vue';
 export default {
   components: {
     ComCodeGrp,
-    ComCode
+    // ComCode
   }
 }
 </script>

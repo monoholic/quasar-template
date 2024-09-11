@@ -274,6 +274,13 @@ export default {
         , searchUseYn : this.search.useYn
       }
 
+      api.post("/comCode/getComCodeGrpList", params)
+      .then((res) => {
+        console.log('grpres ::: ', res);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
       // 서버 통신
       this.rowsSet();
     },

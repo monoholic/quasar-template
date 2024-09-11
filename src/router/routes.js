@@ -23,7 +23,7 @@ const routes = [
   {
     name: "/commonCode",
     path: "/commoncode",
-    component: () => import("layouts/CommonCodeLayout.vue"),
+    component: () => import("../pages/ComCodeMng/ComCodeMng.vue"),
   },
   {
     name: "/roleManage",
@@ -44,6 +44,11 @@ const routes = [
     name: "/userChange",
     path: "/userChange",
     component: () => import("layouts/UserChangeLayout.vue"),
+  },
+  {
+    name: "/userMng",
+    path: "/userMng",
+    component: () => import("../pages/Users/UserMng.vue"),
   },
   {
     path: "/:catchAll(.*)*",
