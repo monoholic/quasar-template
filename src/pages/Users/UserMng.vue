@@ -76,89 +76,90 @@
 
   <!-- 추가 수정 삭제 form 영역 -->
   <div class="fromDiv" v-show="modalToggle">
-    <q-card class="form-card" v-show="modalToggle" @mousedown="startDrag" @touchstart="startDrag" id="formCard">
-      <div class="form-container" v-show="formToggle">
-        <q-card-actions>
+    <div class="form-card" ref="formCard">
+      <q-card v-show="modalToggle" @mousedown="startDrag">
+        <div class="form-container" v-show="formToggle">
+          <q-card-actions>
+            
+            <q-input class="form-node" v-model="editedItem.userId" label-slot :readonly="readonly">
+              <template v-slot:label>
+                <span>사용자ID</span><span class="requiredLabel"> *</span>
+              </template>
+            </q-input>
+            <q-space/>
+            <q-input class="form-node" v-model="editedItem.userNm" label-slot>
+              <template v-slot:label>
+                <span>사용자명</span><span class="requiredLabel"> *</span>
+              </template>
+            </q-input>
+            <q-space/>
+            <q-select class="form-node" v-model="editedItem.useYn" :options="useYnOption2" label-slot>
+              <template v-slot:label>
+                <span>사용 구분</span><span class="requiredLabel"> *</span>
+              </template>
+            </q-select>
+
+            <q-input class="form-node" v-model="editedItem.telNo" label="전화번호" />
+            <q-space/>
+            <q-input class="form-node" v-model="editedItem.email" label="이메일" />
+            <q-space/>
+            <q-input class="form-node" v-model="editedItem.gender" label="성별" />
+            
+            <q-input class="form-node" v-model="editedItem.deptNm" label="부서" />
+            <q-space/>
+            <q-input class="form-node" v-model="editedItem.jikgyub" label="직급" />
+            <q-space/><q-space/><q-space/><q-space/><q-space/><q-space/>
+          </q-card-actions>
+
+          <q-card-actions align="right">
+            <q-btn color="primary" :label="pwBtnLabel" @click="pwModal"></q-btn>
+            <q-space/>
+            <q-btn color="primary" label="CANCEL" @click="closeModal"></q-btn>
+            <q-btn color="primary" label="SAVE" @click="saveData"></q-btn>
+          </q-card-actions>
+        </div>
+
+        <div class="form-container" v-show="delteFormToggle">
+          <q-card-section class="delete-text">
+            선택한 데이터를 지우시겠습니까??
+          </q-card-section>
           
-          <q-input v-model="editedItem.userId" label-slot :readonly="readonly">
-            <template v-slot:label>
-              <span>사용자ID</span><span class="requiredLabel"> *</span>
-            </template>
-          </q-input>
-          <q-space/>
-          <q-input v-model="editedItem.userNm" label-slot>
-            <template v-slot:label>
-              <span>사용자명</span><span class="requiredLabel"> *</span>
-            </template>
-          </q-input>
-          <q-space/>
-          <q-input v-model="editedItem.useYn" label-slot>
-            <template v-slot:label>
-              <span>사용여부</span><span class="requiredLabel"> *</span>
-            </template>
-          </q-input>
+          <q-card-actions align="center">
+            <q-btn color="primary" label="CANCEL" @click="closeModal"></q-btn>
+            <q-btn color="primary" label="CONFIRM" @click="delteData"></q-btn>
+            <q-btn color="primary" label="CHECK_LIST" @click="checkDeleteItem"></q-btn>
+          </q-card-actions>
 
-          <q-input v-model="editedItem.telNo" label="전화번호" />
-          <q-space/>
-          <q-input v-model="editedItem.email" label="이메일" />
-          <q-space/>
-          <q-input v-model="editedItem.gender" label="성별" />
-          
-          <q-input v-model="editedItem.deptNm" label="부서" />
-          <q-space/>
-          <q-input v-model="editedItem.jikgyub" label="직급" />
-          <q-space/>
-          <q-input v-model="editedItem.role" label="역할" />
-        </q-card-actions>
+          <q-separator inset />
 
-        <q-card-actions align="right">
-          <q-btn color="primary" :label="pwBtnLabel" @click="pwModal"></q-btn>
-          <q-space/>
-          <q-btn color="primary" label="CANCEL" @click="closeModal"></q-btn>
-          <q-btn color="primary" label="SAVE" @click="saveData"></q-btn>
-        </q-card-actions>
-      </div>
+          <q-card-section v-show="checkDeleteItemToggle">
+            {{ deleteItem }}
+          </q-card-section>
+        </div>
 
-      <div class="form-container" v-show="delteFormToggle">
-        <q-card-section class="delete-text">
-          선택한 데이터를 지우시겠습니까??
-        </q-card-section>
-        
-        <q-card-actions align="center">
-          <q-btn color="primary" label="CANCEL" @click="closeModal"></q-btn>
-          <q-btn color="primary" label="CONFIRM" @click="delteData"></q-btn>
-          <q-btn color="primary" label="CHECK_LIST" @click="checkDeleteItem"></q-btn>
-        </q-card-actions>
-
-        <q-separator inset />
-
-        <q-card-section v-show="checkDeleteItemToggle">
-          {{ deleteItem }}
-        </q-card-section>
-      </div>
-
-      <div class="form-container" v-show="pwFromToggle">
-        <q-card-section class="pw-text">
-          {{ pwBtnLabel }}
-        </q-card-section>
-        <q-card-actions>
-          <q-input v-model="editedItem.password" style="width: 100%;" label-slot>
-            <template v-slot:label>
-              <span>비밀번호</span><span class="requiredLabel"> *</span>
-            </template>
-          </q-input>
-          <q-input v-model="passwordCheck" style="width: 100%;" label-slot>
-            <template v-slot:label>
-              <span>비밀번호 확인</span><span class="requiredLabel"> *</span>
-            </template>
-          </q-input>
-        </q-card-actions>
-        <q-card-actions align="right">
-          <q-btn color="primary" label="CANCEL" @click="closePwModal"></q-btn>
-          <q-btn color="primary" label="SAVE" @click="savePwData"></q-btn>
-        </q-card-actions>
-      </div>
-    </q-card>
+        <div class="form-container" v-show="pwFromToggle">
+          <q-card-section class="pw-text">
+            {{ pwBtnLabel }}
+          </q-card-section>
+          <q-card-actions>
+            <q-input v-model="editedItem.password" style="width: 100%;" label-slot>
+              <template v-slot:label>
+                <span>비밀번호</span><span class="requiredLabel"> *</span>
+              </template>
+            </q-input>
+            <q-input v-model="passwordCheck" style="width: 100%;" label-slot>
+              <template v-slot:label>
+                <span>비밀번호 확인</span><span class="requiredLabel"> *</span>
+              </template>
+            </q-input>
+          </q-card-actions>
+          <q-card-actions align="right">
+            <q-btn color="primary" label="CANCEL" @click="closePwModal"></q-btn>
+            <q-btn color="primary" label="SAVE" @click="savePwData"></q-btn>
+          </q-card-actions>
+        </div>
+      </q-card>
+    </div>
   </div>
 
 
@@ -196,7 +197,6 @@ export default {
         { name: 'userNm', align: 'center', label: '사용자명', field: 'userNm', style: 'width:6%', sortable: true },
         { name: 'deptNm', align: 'center', label: '부서', field: 'deptNm', style: 'width:5%', sortable: true },
         { name: 'jikgyub', align: 'center', label: '직급', field: 'jikgyub', style: 'width:3%', sortable: true },
-        { name: 'role', align: 'center', label: '역할', field: 'role', style: 'width:3%', sortable: true },
         { name: 'email', align: 'center', label: '이메일', field: 'email', style: 'width:15%', sortable: true },
         { name: 'telNo', align: 'center', label: '전화번호', field: 'telNo', style: 'width:10%', sortable: true },
         { name: 'gender', align: 'center', label: '성별', field: 'gender', style: 'width:0.5%', sortable: true },
@@ -238,11 +238,13 @@ export default {
         userNm: null,
         deptNm: null,
         jikgyub: null,
-        role: null,
         email: null,
         telNo: null,
         gender: null,
-        useYn: null,
+        useYn: {
+          label: '사용',
+          value: 'Y'
+        },
         password: null,
         addMod: 'A',
       },
@@ -251,11 +253,13 @@ export default {
         userNm: null,
         deptNm: null,
         jikgyub: null,
-        role: null,
         email: null,
         telNo: null,
         gender: null,
-        useYn: null,
+        useYn: {
+          label: '사용',
+          value: 'Y'
+        },
         password: null,
         addMod: 'A',
       },
@@ -277,14 +281,25 @@ export default {
             value: null
           },
           {
-            label: 'Y',
+            label: '사용',
             value: 'Y'
           },
           {
-            label: 'N',
+            label: '미사용',
             value: 'N'
           }
         ],
+        useYnOption2:[
+          {
+            label: '사용',
+            value: 'Y'
+          },
+          {
+            label: '미사용',
+            value: 'N'
+          }
+        ],
+
 
       // 테이블 내용변경(sort, page)
       pagination: {
@@ -310,8 +325,7 @@ export default {
     setTableData(){
       console.log('테이블세팅');
       this.selected = [];
-      this.editedItem = this.$_.cloneDeep(this.defaultItem);
-      this.passwordCheck = null;
+      
       const params = {
           sortBy:  this.pagination.sortBy
         , descending: (this.pagination.descending === true)? 'dc' : 'ac'
@@ -360,25 +374,38 @@ export default {
       this.formToggle = true
     },
 
-    // 추가, 수정 모달창 닫기
+    // 추가, 수정, 삭제 모달창 닫기
     closeModal(){
       this.editedItem = this.$_.cloneDeep(this.defaultItem);
+      this.deleteItem = [];
       this.readonly = false;  
       this.modalToggle = false;    
       this.formToggle = false;
       this.delteFormToggle = false;
+      this.checkDeleteItemToggle = false;
+      this.passwordCheck = null;
+      this.replaceModal();
     },
 
     // 추가, 수정된 데이터 저장
     saveData() {
-      if(this.editedItem.userId === null ||
-        this.editedItem.userNm === null ||
-        this.editedItem.useYn === null ||
-        (this.editedItem.password === null && this.editedItem.addMod === 'A')
+      const userId = this.editedItem.userId;
+      const userNm = this.editedItem.userNm;
+      const useYn = this.editedItem.useYn;
+
+      if((userId === null || userId === "")
+        || (userNm === null || userNm === "")
+        || (useYn === null || useYn === "")
       ) {
         alert("필수값들을 입력해주세요");
         return;
+      } else if(this.editedItem.password === null && this.editedItem.addMod === 'A'){
+        alert("비밀번호를 입력해주세요");
+        return;
       }
+
+      this.editedItem.useYn = this.editedItem.useYn.value;
+
       // 서버통신
       api.post("/userMng/addMod", this.editedItem)
       .then((res) => {
@@ -387,6 +414,9 @@ export default {
         this.closeModal();
       })
       .catch((err) => {
+        if(this.editedItem.useYn === 'Y') this.editedItem.useYn = {label: '사용', value: 'Y'}
+        else this.editedItem.useYn = {label: '미사용', value: 'N'}
+
         if(err.code === 'ERR_BAD_REQUEST') alert('이미 아이디가 있습니다.');
       })
     },
@@ -399,16 +429,15 @@ export default {
 
     // 패스워드 확인
     savePwData(){
-      if(this.editedItem.addMod === 'A'){
-        if(this.editedItem.password === null || this.passwordCheck === null){
-          alert("입력칸을 채워주세요")
-        } else{
-          if(this.editedItem.password != this.passwordCheck){
-            alert("비밀번호가 일치하지 않습니다.");
-          } else {
-            this.formToggle = true;
-            this.pwFromToggle = false;
-          }
+      if((this.editedItem.password === null || this.passwordCheck === null)
+        || (this.editedItem.password === "" || this.passwordCheck === "")){
+        alert("입력칸을 채워주세요")
+      } else{
+        if(this.editedItem.password != this.passwordCheck){
+          alert("비밀번호가 일치하지 않습니다.");
+        } else {
+          this.formToggle = true;
+          this.pwFromToggle = false;
         }
       }
     },
@@ -469,8 +498,8 @@ export default {
     startDrag(event) {
       this.isDragging = true;
 
-      const clientX = event.clientX || event.touches[0].clientX;
-      const clientY = event.clientY || event.touches[0].clientY;
+      const clientX = event.clientX;
+      const clientY = event.clientY;
 
       // 초기 드래그 시작 지점과 모달의 현재 위치 계산
       this.dragStartX = clientX - this.modalOffsetX;
@@ -478,20 +507,18 @@ export default {
 
       document.addEventListener("mousemove", this.onDrag);
       document.addEventListener("mouseup", this.stopDrag);
-      document.addEventListener("touchmove", this.onDrag);
-      document.addEventListener("touchend", this.stopDrag);
     },
     onDrag(event) {
       if (!this.isDragging) return;
 
-      const clientX = event.clientX || event.touches[0].clientX;
-      const clientY = event.clientY || event.touches[0].clientY;
+      const clientX = event.clientX;
+      const clientY = event.clientY;
 
       // 현재 마우스 위치에 따라 모달의 새로운 좌표 계산
       this.modalOffsetX = clientX - this.dragStartX;
       this.modalOffsetY = clientY - this.dragStartY;
 
-      const formCard = document.getElementById("formCard");
+      const formCard = this.$refs.formCard;
       formCard.style.transform = `translate(${this.modalOffsetX}px, ${this.modalOffsetY}px)`;
     },
     stopDrag() {
@@ -499,9 +526,16 @@ export default {
 
       document.removeEventListener("mousemove", this.onDrag);
       document.removeEventListener("mouseup", this.stopDrag);
-      document.removeEventListener("touchmove", this.onDrag);
-      document.removeEventListener("touchend", this.stopDrag);
     },
+    // 모달창 가운데 정렬
+    replaceModal(){
+      this.dragStartX = 0;
+      this.dragStartY = 0;
+      this.modalOffsetX = 0;
+      this.modalOffsetY = 0;
+      const formCard = this.$refs.formCard;
+      formCard.style.transform = `translate(0px, 0px)`;
+    }
 
   },
 
@@ -566,6 +600,10 @@ export default {
   padding: 20px;
   box-sizing: border-box;
   cursor: move;
+}
+
+.form-node {
+  width: 30%;
 }
 
 .search-section{

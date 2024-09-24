@@ -1,11 +1,11 @@
 <template>
   <div class="com-code-container">
     <div class="comCode">
-      <ComCodeGrp></ComCodeGrp>
+      <ComCodeGrp @rowClick="rowClick"></ComCodeGrp>
     </div>
-    <!-- <div class="comCode">
-      <ComCode></ComCode>
-    </div> -->
+    <div class="comCode">
+      <ComCode :selectedGrpId="selectedGrpId"></ComCode>
+    </div>
   </div>
 </template>
 
@@ -16,7 +16,19 @@ import ComCode from './ComCode.vue';
 export default {
   components: {
     ComCodeGrp,
-    // ComCode
+    ComCode
+  },
+
+  data(){
+    return{
+      selectedGrpId: null,
+    }
+  },
+
+  methods: {
+    rowClick(grpId){
+      this.selectedGrpId = grpId;
+    },
   }
 }
 </script>

@@ -28,7 +28,7 @@ const routes = [
   {
     name: "/roleManage",
     path: "/roleManage",
-    component: () => import("layouts/RoleManageLayout.vue"),
+    component: () => import("../pages/Role/RoleMng.vue"),
   },
   {
     name: "/menuManage",

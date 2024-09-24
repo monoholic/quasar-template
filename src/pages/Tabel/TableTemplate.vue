@@ -81,46 +81,55 @@
 
   <!-- 추가, 수정 모달 form -->
   <div class="fromDiv" v-show="modalToggle">
-    <q-card class="form-card" v-show="modalToggle" @mousedown="startDrag" @touchstart="startDrag" id="formCard">
-      <div class="form-container" v-show="formToggle">
-        <q-card-actions>
+    <div class="form-card" ref="formCard">
+      <q-card v-show="modalToggle" @mousedown="startDrag">
+        <div class="form-container" v-show="formToggle">
+          <q-card-actions>
 
-          <q-input v-model="editedItem.name" label="Dessert (100g serving)" :readonly="readonly" />
-          <q-space/>
-          <q-input filled v-model="editedItem.calories" label="Calories" />
-          <q-space/>
-          <q-input outlined v-model="editedItem.fat" label="Fat (g)" />
-          
-          <q-input standout v-model="editedItem.carbs" label="Carbs (g)" />
-          <q-space/>
-          <q-input standout v-model="editedItem.protein" label="Protein (g)" />
-          <q-space/>
-          <q-space/>
-          <q-space/>
-          <q-space/>
-          <q-space/>
-          <q-space/>
+            <q-input v-model="editedItem.name" label="Dessert (100g serving)" :readonly="readonly" />
+            <q-space/>
+            <q-input filled v-model="editedItem.calories" label="Calories" />
+            <q-space/>
+            <q-input outlined v-model="editedItem.fat" label="Fat (g)" />
+            
+            <q-input standout v-model="editedItem.carbs" label="Carbs (g)" />
+            <q-space/>
+            <q-input standout v-model="editedItem.protein" label="Protein (g)" />
+            <q-space/>
+            <q-space/>
+            <q-space/>
+            <q-space/>
+            <q-space/>
+            <q-space/>
 
-        </q-card-actions>
+          </q-card-actions>
 
-        <q-separator/>
+          <q-separator/>
 
-        <q-card-actions align="right">
-          <q-btn color="primary" label="CANCEL" @click="closeModal"></q-btn>
-          <q-btn color="primary" label="SAVE" @click="saveData"></q-btn>
-        </q-card-actions>
-      </div>
+          <q-card-actions align="right">
+            <q-btn color="primary" label="CANCEL" @click="closeModal"></q-btn>
+            <q-btn color="primary" label="SAVE" @click="saveData"></q-btn>
+          </q-card-actions>
+        </div>
 
-      <div class="form-container" v-show="delteFormToggle">
-        <q-card-section class="delete-text">
-          선택한 데이터를 지우시겠습니까??
-        </q-card-section>
-        <q-card-actions align="center">
-          <q-btn color="primary" label="CANCEL" @click="closeModal"></q-btn>
-          <q-btn color="primary" label="CONFIRM" @click="delteData"></q-btn>
-        </q-card-actions>
-      </div>
-    </q-card>
+        <div class="form-container" v-show="delteFormToggle">
+          <q-card-section class="delete-text">
+            선택한 데이터를 지우시겠습니까??
+          </q-card-section>
+          <q-card-actions align="center">
+            <q-btn color="primary" label="CANCEL" @click="closeModal"></q-btn>
+            <q-btn color="primary" label="CONFIRM" @click="delteData"></q-btn>
+            <q-btn color="primary" label="CHECK_LIST" @click="checkDeleteItemToggle = !checkDeleteItemToggle"></q-btn>
+          </q-card-actions>
+
+          <q-separator inset />
+
+          <q-card-section v-show="checkDeleteItemToggle">
+            {{ deleteItem }}
+          </q-card-section>
+        </div>
+      </q-card>
+    </div>
   </div>
 
 </template>
@@ -146,8 +155,7 @@ export default {
           required: true,
           label: 'Dessert (100g serving)',
           align: 'left',
-          field: row => row.name,
-          format: val => `${val}`,
+          field: 'name',
           sortable: true
         },
         { name: 'calories', align: 'left', label: 'Calories', field: 'calories', sortable: true },
@@ -468,6 +476,8 @@ export default {
 
       // 테이블 체크된 리스트
       selected: [],
+      // 삭제 아이템
+      deleteItem: [],
 
       // 모달창 토글
       modalToggle: false,
@@ -477,6 +487,9 @@ export default {
 
       // 삭제 모달창 토글
       delteFormToggle: false,
+
+      // 삭제 아이템 리스트창 토글
+      checkDeleteItemToggle: false,
 
       // 수정
       editedItem: {
@@ -524,10 +537,13 @@ export default {
     // 테이블 초기 데이터 세팅
     setTableData(){
       console.log('테이블데이터 세팅');
+      this.selected = [];
+      
       const params = {
           sortBy:  this.pagination.sortBy
-        , descending: (this.pagination.descending === null)? 'ac' : 'dc'
+        , descending: (this.pagination.descending === true)? 'dc' : 'ac'
         , page: this.pagination.page
+        , numOfRows: this.pagination.rowsPerPage
         , search: {
             name : this.search.name
           , calories : this.search.calories
@@ -543,6 +559,11 @@ export default {
     rowsSet() {
       this.rows.forEach((row, index) => {
         row.index = index+1;
+        for(const [key, value] of Object.entries(row)){
+          if(`${value}` === 'null'){
+            row[`${key}`] = '-'
+          } 
+        }
       })
     },
 
@@ -561,13 +582,16 @@ export default {
       console.log('모달오픈');
     },
 
-    // 추가, 수정 모달창 닫기
+    // 추가, 수정, 삭제 모달창 닫기
     closeModal(){
       this.editedItem = this.$_.cloneDeep(this.defaultItem);
+      this.deleteItem = [];
       this.readonly = false;  
       this.modalToggle = false;    
       this.formToggle = false;
       this.delteFormToggle = false;
+      this.checkDeleteItemToggle = false;
+      this.replaceModal();
     },
 
     // 추가, 수정된 데이터 저장
@@ -579,21 +603,25 @@ export default {
 
     // 삭제 버튼
     removeMethod() {
-      this.modalToggle = true;
-      this.delteFormToggle = true;
-      console.log('삭제모달');
+      
+      if(this.selected.length === 0){
+        alert("선택된 데이터가 없습니다");
+      } else {
+        console.log('삭제모달');
+        this.selected.forEach((item) => {
+          this.deleteItem.push(item.name);
+        });
+        this.modalToggle = true;
+        this.delteFormToggle = true;
+      }
     },
 
     // 삭제 확인
     delteData() {
       // 서버통신
-      if(this.selected.length === 0){
-        alert("선택된 데이터가 없습니다");
-        this.closeModal();
-      } else{
-        console.log(this.selected);
-        this.setTableData();
-      }
+      console.log(this.deleteItem);
+      this.setTableData();
+      this.closeModal();
     },
 
     // 페이지 변화에 따른 작용
@@ -621,20 +649,18 @@ export default {
 
       document.addEventListener("mousemove", this.onDrag);
       document.addEventListener("mouseup", this.stopDrag);
-      document.addEventListener("touchmove", this.onDrag);
-      document.addEventListener("touchend", this.stopDrag);
     },
     onDrag(event) {
       if (!this.isDragging) return;
 
-      const clientX = event.clientX || event.touches[0].clientX;
-      const clientY = event.clientY || event.touches[0].clientY;
+      const clientX = event.clientX;
+      const clientY = event.clientY;
 
       // 현재 마우스 위치에 따라 모달의 새로운 좌표 계산
       this.modalOffsetX = clientX - this.dragStartX;
       this.modalOffsetY = clientY - this.dragStartY;
 
-      const formCard = document.getElementById("formCard");
+      const formCard = this.$refs.formCard;
       formCard.style.transform = `translate(${this.modalOffsetX}px, ${this.modalOffsetY}px)`;
     },
     stopDrag() {
@@ -642,16 +668,25 @@ export default {
 
       document.removeEventListener("mousemove", this.onDrag);
       document.removeEventListener("mouseup", this.stopDrag);
-      document.removeEventListener("touchmove", this.onDrag);
-      document.removeEventListener("touchend", this.stopDrag);
     },
+    // 모달창 가운데 정렬
+    replaceModal(){
+      this.dragStartX = 0;
+      this.dragStartY = 0;
+      this.modalOffsetX = 0;
+      this.modalOffsetY = 0;
+      const formCard = this.$refs.formCard;
+      formCard.style.transform = `translate(0px, 0px)`;
+    }
   },
 
   computed: {
+    // 페이지 길이
     pageLength() {
       return Math.ceil(this.pagination.rowsNumber / this.pagination.rowsPerPage) 
     },
 
+    // 현재 페이지
     curPageSet() {
       return this.pagination.page
     }

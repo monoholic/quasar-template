@@ -19,6 +19,7 @@
         v-model:pagination="pagination"
         @request="onRequest"
         :rows-per-page-options="[20]"
+        @row-click="rowClick"
       >
 
         <!-- 탑 버튼 -->
@@ -34,7 +35,7 @@
             </q-card-section>
 
             <!-- 검색, 추가, 삭제 버튼 -->
-            <q-card-actions align='right' v-if="selectedGrpId != null">
+            <q-card-actions align='right'>
               <q-btn color="primary" label="Search" @click="setTableData()"></q-btn>
               <q-space />
               <q-btn color="primary" label="Add" @click="formOpen()"></q-btn>
@@ -77,45 +78,30 @@
       <q-card v-show="modalToggle" @mousedown="startDrag">
         <div class="form-container" v-show="formToggle">
           <q-card-actions>
-            <q-input class="form-node" v-model="editedItem.codeId" label-slot :readonly="readonly">
+            <q-input class="form-node" v-model="editedItem.roleId" label-slot :readonly="readonly">
               <template v-slot:label>
-                <span>공통코드 ID</span><span class="requiredLabel"> *</span>
+                <span>권한 코드</span><span class="requiredLabel"> *</span>
               </template>
             </q-input>
             <q-space/>
-            <q-input class="form-node" v-model="editedItem.codeGrpId" label-slot :readonly=true>
+            <q-input class="form-node" v-model="editedItem.roleNm" label-slot>
               <template v-slot:label>
-                <span>공통코드 그룹 ID</span><span class="requiredLabel"> *</span>
+                <span>권한명</span><span class="requiredLabel"> *</span>
               </template>
             </q-input>
             <q-space/>
-            <q-input class="form-node" v-model="editedItem.codeNm" label-slot>
+            <q-input class="form-node" v-model="editedItem.roleDesc" label-slot>
               <template v-slot:label>
-                <span>공통코드명</span><span class="requiredLabel"> *</span>
+                <span>권한 설명</span><span class="requiredLabel"> *</span>
               </template>
             </q-input>
-            
-            <q-input class="form-node" v-model="editedItem.codeEngNm" label-slot>
-              <template v-slot:label>
-                <span>공통코드 영문명</span><span class="requiredLabel"> *</span>
-              </template>
-            </q-input>
-            <q-space/>
-            <q-input class="form-node" v-model="editedItem.uppCodeId" label="상위 공통코드 ID" />
-            <q-space/>
-            <q-input class="form-node" v-model="editedItem.codeDesc" label="공통코드 설명" />
-            
-            <q-input class="form-node" v-model="editedItem.codeLvl" label="코드 레벨" />
-            <q-space/>
-            <q-input class="form-node" v-model="editedItem.sortOdr" label="정렬 순서" />
-            <q-space/>
-            <q-input class="form-node" v-model="editedItem.resv1" label="예비 1" />
 
-            <q-input class="form-node" v-model="editedItem.resv2" label="예비 2" />
-            <q-space/>
-            <q-input class="form-node" v-model="editedItem.resv3" label="예비 3" />
-            <q-space/>
-            <q-select class="form-node" v-model="editedItem.useYn" :options="useYnOpts2" label="사용 구분" />
+            <q-select class="form-node" v-model="editedItem.useYn" :options="useYnOpts2" label-slot>
+              <template v-slot:label>
+                <span>사용 구분</span><span class="requiredLabel"> *</span>
+              </template>
+            </q-select>
+            
           </q-card-actions>
 
           <q-card-actions align="right">
@@ -148,17 +134,12 @@
 
 <script>
 import { api } from 'src/boot/axios';
-import { ref } from 'vue';
 
 export default {
-  props: {
-    selectedGrpId: String,
-  },
-
   data() {
     return {
       // 화면 메인 타이틀
-      mainTitle: "공통코드 관리",
+      mainTitle: "역할 관리",
 
       // 테이블 헤더
       columns: [
@@ -168,23 +149,18 @@ export default {
           field: 'index'
         },
         {
-          name: 'codeId',
+          name: 'roleId',
           required: true,
-          label: '공통코드 ID',
+          label: '권한 코드',
           align: 'center',
-          field: 'codeId',
+          field: 'roleId',
           sortable: true
         },
-        { name: 'codeGrpId', align: 'center', label: '공통코드 그룹 ID', field: 'codeGrpId', sortable: true },
-        { name: 'codeNm', align: 'center', label: '공통코드명', field: 'codeNm', sortable: true },
-        { name: 'codeEngNm', align: 'center', label: '공통코드 영문명', field: 'codeEngNm', sortable: true },
-        { name: 'uppCodeId', align: 'center', label: '상위 공통코드 ID', field: 'uppCodeId', sortable: true },
-        { name: 'codeLvl', align: 'center', label: '코드 레벨', field: 'codeLvl', sortable: true },
-        { name: 'codeDesc', align: 'center', label: '공통코드 설명', field: 'codeDesc', sortable: true },
-        { name: 'sortOdr', align: 'center', label: '정렬순서', field: 'sortOdr', sortable: true },
+        { name: 'roleNm', align: 'center', label: '권한명', field: 'roleNm', sortable: true },
+        { name: 'roleDesc', align: 'center', label: '권한 설명', field: 'roleDesc', sortable: true },
         { name: 'useYn', align: 'center', label: '사용구분', field: 'useYn', sortable: true },
-        { name: 'updId', align: 'center', label: '수정자', field: 'updId', sortable: true },
-        { name: 'updDate', align: 'center', label: '수정일자', field: 'updDate', sortable: true },
+        { name: 'uptId', align: 'center', label: '수정자', field: 'uptId', sortable: true },
+        { name: 'uptDate', align: 'center', label: '수정일자', field: 'uptDate', sortable: true },
         { name: 'regId', align: 'center', label: '등록자', field: 'regId', sortable: true },
         { name: 'regDate', align: 'center', label: '등록일자', field: 'regDate', sortable: true },
         { name: 'edit', align: 'center', label: 'Edit', field: 'edit', sortable: false }
@@ -211,17 +187,9 @@ export default {
 
       // 수정
       editedItem: {
-        codeId: null,
-        codeGrpId: this.selectedGrpId,
-        codeNm: null,
-        codeEngNm: null,
-        uppCodeId: null,
-        codeDesc: null,
-        codeLvl: null,
-        sortOdr: 1,
-        resv1: null,
-        resv2: null,
-        resv3: null,
+        roleId: null,
+        roleNm: null,
+        roleDesc: null,
         useYn: {
           label: '사용',
           value: 'Y'
@@ -229,17 +197,9 @@ export default {
         addMod: 'A'
       },
       defaultItem: {
-        codeId: null,
-        codeGrpId: this.selectedGrpId,
-        codeNm: null,
-        codeEngNm: null,
-        uppCodeId: null,
-        codeDesc: null,
-        codeLvl: null,
-        sortOdr: 1,
-        resv1: null,
-        resv2: null,
-        resv3: null,
+        roleId: null,
+        roleNm: null,
+        roleDesc: null,
         useYn: {
           label: '사용',
           value: 'Y'
@@ -276,16 +236,16 @@ export default {
           value: null
         },
         {
-          label: '공통코드 ID',
-          value: 'codeId'
+          label: '권한 코드',
+          value: 'roleId'
         },
         {
-          label: '공통코드명',
-          value: 'codeNm'
+          label: '권한명',
+          value: 'roleNm'
         },
         {
-          label: '공통코드 설명',
-          value: 'codeDesc'
+          label: '권한 설명',
+          value: 'roleDesc'
         },
       ],
       useYnOpts:[
@@ -326,7 +286,7 @@ export default {
     // 테이블 초기 데이터 세팅
     setTableData(){
       this.selected = [];
-      
+
       const params = {
           sortBy:  this.pagination.sortBy
         , descending: (this.pagination.descending === true)? 'dc' : 'ac'
@@ -335,10 +295,9 @@ export default {
         , searchTxt: (this.search.txt !== null && this.search.txt !== "")? this.search.txt : null
         , searchOpt : this.search.opt.value
         , searchUseYn : this.search.useYn.value
-        , selectedGrpId: this.selectedGrpId
       }
 
-      api.post("/comCode/getComCodeList", params)
+      api.post("/roleMng/getRoleList", params)
       .then((res) => {
         this.rows = res.data.data.resList;
         this.pagination.rowsNumber = res.data.data.total;
@@ -356,7 +315,7 @@ export default {
         for(const [key, value] of Object.entries(row)){
           if(`${value}` === 'null'){
             row[`${key}`] = '-'
-          }
+          } 
         }
       })
     },
@@ -374,7 +333,7 @@ export default {
     // 추가 버튼
     formOpen(event) {
       this.modalToggle = true;
-      this.formToggle = true
+      this.formToggle = true;
     },
 
     // 추가, 수정, 삭제 모달창 닫기
@@ -391,12 +350,12 @@ export default {
 
     // 추가, 수정된 데이터 저장
     saveData() {
-      const codeId = this.editedItem.codeId;
-      const codeNm = this.editedItem.codeNm;
-      const codeEngNm = this.editedItem.codeEngNm;
-      if( (codeId === null || codeId === "")
-        || (codeNm === null || codeNm === "")
-        || (codeEngNm === null || codeEngNm === "")
+      const roleId = this.editedItem.roleId;
+      const roleNm = this.editedItem.roleNm;
+      const roleDesc = this.editedItem.roleDesc;
+      if( (roleId === null || roleId === "")
+        || (roleNm === null || roleNm === "")
+        || (roleDesc === null || roleDesc === "")
       ){
         alert("필수 값들을 입력해 주세요.");
         return
@@ -404,7 +363,7 @@ export default {
 
       this.editedItem.useYn = this.editedItem.useYn.value;
       
-      api.post("/comCode/codeAddMod", this.editedItem)
+      api.post("/roleMng/roleAddMod", this.editedItem)
       .then((res) => {
         alert('저장완료');
         this.setTableData();
@@ -414,7 +373,7 @@ export default {
         if(this.editedItem.useYn === 'Y') this.editedItem.useYn = {label: '사용', value: 'Y'}
         else this.editedItem.useYn = {label: '미사용', value: 'N'}
         
-        if(err.code === 'ERR_BAD_RESPONSE') alert('이미 공통코드 ID가 있습니다.');
+        if(err.code === 'ERR_BAD_RESPONSE') alert('이미 중복된 권한코드가 있습니다.');
       })
       
     },
@@ -425,7 +384,7 @@ export default {
         alert("선택된 데이터가 없습니다");
       } else{
         this.selected.forEach((item) => {
-          this.deleteItem.push(item.codeId);
+          this.deleteItem.push(item.roleId);
         });
         this.modalToggle = true;
         this.delteFormToggle = true;
@@ -434,11 +393,7 @@ export default {
 
     // 삭제 확인
     delteData() {
-      const params = {
-        deleteItem: this.deleteItem,
-        codeGrpId: this.selectedGrpId
-      }
-      api.post("/comCode/codeDel", params)
+      api.post("/roleMng/roleDel", this.deleteItem)
       .then((res) => {
         alert('삭제완료');
         this.setTableData();
@@ -503,9 +458,9 @@ export default {
       formCard.style.transform = `translate(0px, 0px)`;
     },
 
-    // grpCodeId 세팅
-    editedItemCodeGrpIdSet(){
-      this.editedItem.codeGrpId = this.selectedGrpId;
+    // 행 클릭 이벤트
+    rowClick(evt, row, index){
+      this.$emit("rowClick", row.roleId);
     }
   },
 
@@ -518,12 +473,11 @@ export default {
     // 현재 페이지
     curPageSet() {
       return this.pagination.page
-    },
+    }
   },
 
-  updated () {
+  created () {
     this.setTableData();
-    this.editedItemCodeGrpIdSet();
   },
 }
 </script>
