@@ -46,6 +46,8 @@
 </template>
 
 <script>
+import Cookies from "js-cookie";
+
 export default {
   name: "LoginLayout",
   data() {
@@ -55,26 +57,51 @@ export default {
     };
   },
   methods: {
+    //localStorage에 저장된 key,Value를 꺼내는 방법
+    //let userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    //console.log("===> ", userInfo.userId);
     login() {
       let id = this.id;
       let password = this.password;
-      console.log("test");
-      console.log(id);
-      console.log(password);
-
+      if (id === "") {
+        alert("아이디를 입력하세요.");
+        return null;
+      } else if (password === "") {
+        alert("비밀번호를 입력하세요.");
+        return null;
+      }
       this.$api
-        .post("/login", null, { params: { username: id, password: password } })
+        .post("/login", null, {
+          withCredentials: true,
+          params: { username: id, password: password },
+        })
         .then((response) => {
-          console.log(response.status);
-
-          console.log("Access Token from Header:", response.headers);
+          if (response.status == 200) {
+            console.log(response);
+            this.getUserInfo();
+            this.$router.push("/home");
+          }
         })
         .catch((error) => {
+          if (error.response.status == 401) {
+            alert("로그인에 실패했습니다. 관리자에게 문의하세요.");
+          }
           console.log(" error ==>", error);
           this.isLoading = false;
         })
         .finally(() => {
           console.log("항상 마지막에 실행");
+        });
+    },
+    getUserInfo() {
+      let id = this.id;
+      console.log(id);
+      this.$api
+        .post("/getUserInfo", {
+          userId: id,
+        })
+        .then((res) => {
+          localStorage.setItem("userInfo", JSON.stringify(res.data.data));
         });
     },
   },

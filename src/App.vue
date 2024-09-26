@@ -13,12 +13,18 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" side="left" show-if-above bordered>
+    <q-drawer
+      v-model="leftDrawerOpen"
+      side="left"
+      show-if-above
+      bordered
+      v-if="showMenu"
+    >
       <DrawerLayout />
     </q-drawer>
 
     <q-page-container>
-      <router-view />
+      <router-view :key="$route.fullPath" />
     </q-page-container>
   </q-layout>
 </template>
@@ -33,6 +39,8 @@ export default {
   data() {
     return {
       leftDrawerOpen: false,
+      showMenu: false,
+      userInfo: "",
     };
   },
 
@@ -42,6 +50,26 @@ export default {
     },
     pageMove() {
       this.$router.push("/login");
+    },
+  },
+  computed() {
+    this.userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    console.log(this.userInfo);
+    if (this.userInfo == null) {
+      console.log(this.userInfo);
+      console.log(this.showMenu);
+      this.showMenu = false;
+    } else if (this.userInfo !== null) {
+      console.log(this.userInfo);
+      console.log(this.showMenu);
+      this.showMenu = true;
+    }
+  },
+  watch: {
+    $route(to, from) {
+      // Route 변화 시 실행
+      this.userInfo = JSON.parse(localStorage.getItem("userInfo"));
+      this.showMenu = this.userInfo !== null;
     },
   },
 };

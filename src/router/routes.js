@@ -23,12 +23,12 @@ const routes = [
   {
     name: "/commonCode",
     path: "/commoncode",
-    component: () => import("../pages/ComCodeMng/ComCodeMng.vue"),
+    component: () => import("layouts/CommonCodeLayout.vue"),
   },
   {
     name: "/roleManage",
     path: "/roleManage",
-    component: () => import("../pages/Role/RoleMng.vue"),
+    component: () => import("layouts/RoleManageLayout.vue"),
   },
   {
     name: "/menuManage",
@@ -46,17 +46,16 @@ const routes = [
     component: () => import("layouts/UserChangeLayout.vue"),
   },
   {
-    name: "/userMng",
-    path: "/userMng",
-    component: () => import("../pages/Users/UserMng.vue"),
-  },
-  {
     path: "/:catchAll(.*)*",
     component: () => import("pages/ErrorNotFound.vue"),
   },
   {
     path: "/login",
     component: () => import("layouts/LoginLayout.vue"),
+  },
+  {
+    path: "/home",
+    component: () => import("pages/MainPage.vue"),
   },
 ];
 
