@@ -39,12 +39,9 @@
                 v-model="search.sawonNm"
                 @keyup.enter="setTableData()"
               />
-              <!-- <q-input class="search-input" dense color="primary" label="1" />
-              <q-input class="search-input" dense color="primary" label="2" />
-              <q-input class="search-input" dense color="primary" label="3" /> -->
             </q-card-section>
 
-            <!-- 검색, 업로드, 다운로드 버튼 -->
+            <!-- 검색, 엑셀 폼, 업로드, 다운로드 버튼 -->
             <q-card-actions align="right">
               <q-btn
                 color="primary"
@@ -52,6 +49,11 @@
                 @click="setTableData()"
               ></q-btn>
               <q-space />
+              <q-btn
+                color="primary"
+                label="Template"
+                @click="templateMethod"
+              ></q-btn>
               <q-btn
                 color="primary"
                 label="Upload"
@@ -77,6 +79,7 @@
             direction-links
             boundary-links
             :model-value="curPageSet"
+            @update:model-value="changePage"
           />
         </template>
       </q-table>
@@ -200,6 +203,17 @@ export default {
         rowsNumber: 0,
       },
 
+      excelLogs: [
+        {
+          sawonNo: "1234567",
+          sawonNm: "홍길동",
+          startDate: "240927",
+          startTime: "080000",
+          endTime: "170000",
+          cause: "TEST",
+        },
+      ],
+
       list: null,
       file: null,
     };
@@ -251,6 +265,15 @@ export default {
       this.file = event.target.files[0];
     },
 
+    // 엑셀 폼 다운로드
+    // 다운로드
+    templateMethod() {
+      var excelData = XLSX.utils.json_to_sheet(this.excelLogs); // excel data
+      var workBook = XLSX.utils.book_new(); // new sheet
+      XLSX.utils.book_append_sheet(workBook, excelData, "근무 기록"); // data, sheet name
+      XLSX.writeFile(workBook, "근무 기록 템플릿.xlsx"); // excel file
+    },
+
     // 업로드
     async uploadData(evt) {
       if (!this.file) {
@@ -284,16 +307,14 @@ export default {
         .post("/excel/download", params)
         .then((res) => {
           this.list = res.data.data.resList;
+          var excelData = XLSX.utils.json_to_sheet(this.list); // excel data
+          var workBook = XLSX.utils.book_new(); // new sheet
+          XLSX.utils.book_append_sheet(workBook, excelData, "근무 기록"); // data, sheet name
+          XLSX.writeFile(workBook, "근무 기록.xlsx"); // excel file
         })
         .catch((err) => {
           console.log(err);
         });
-
-      console.log(this.list);
-      var excelData = XLSX.utils.json_to_sheet(this.list); // excel data
-      var workBook = XLSX.utils.book_new(); // new sheet
-      XLSX.utils.book_append_sheet(workBook, excelData, "근무 기록"); // data, sheet name
-      XLSX.writeFile(workBook, "근무 기록.xlsx"); // excel file
     },
 
     // 페이지 변화에 따른 작용
