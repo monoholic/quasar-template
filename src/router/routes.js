@@ -43,7 +43,7 @@ const routes = [
   {
     name: "/logManage",
     path: "/logManage",
-    component: () => import("layouts/LogManageLayout.vue"),
+    component: () => import("/src/pages/LogAPI/LogAPi.vue"),
   },
   {
     name: "/excel",

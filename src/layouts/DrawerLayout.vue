@@ -91,7 +91,6 @@ export default {
     };
 
     const pageMove = (pagePath) => {
-<<<<<<< HEAD
       api
         .post("/logManage/addLog", pagePath)
         .then((res) => {
@@ -103,9 +102,6 @@ export default {
         .finally(() => {
           router.push({ name: pagePath });
         });
-=======
-      router.push({ name: pagePath });
->>>>>>> 6528b27c73ccc326dadd515c697cafd2e76c2408
     };
 
     const menuAppend = (data) => {

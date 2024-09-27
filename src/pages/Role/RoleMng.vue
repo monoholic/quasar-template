@@ -1,13 +1,10 @@
 <template>
   <div class="role-mng-container">
-    <!-- <div class="role-components">
+    <div class="role-components">
       <ComRole @rowClick="rowClick"></ComRole>
     </div>
     <div class="role-components">
       <UserRole :selectedRoleId="selectedRoleId"></UserRole>
-    </div> -->
-    <div>
-      <LogAPi></LogAPi>
     </div>
   </div>
 </template>
@@ -15,13 +12,11 @@
 <script>
 import ComRole from "./ComRole.vue";
 import UserRole from "./UserRole.vue";
-import LogAPi from "../LogAPI/LogAPi.vue";
 
 export default {
   components: {
-    // ComRole,
-    // UserRole,
-    LogAPi,
+    ComRole,
+    UserRole,
   },
 
   data() {
