@@ -51,6 +51,16 @@ const routes = [
     component: () => import("/src/pages/Excel/ExcelTemplate.vue"),
   },
   {
+    name: "/menuChange",
+    path: "/menuChange",
+    component: () => import("/src/pages/MenuChange/MenuChange.vue"),
+  },
+  {
+    name: "/menuRole",
+    path: "/menuRole",
+    component: () => import("/src/pages/MenuChange/MenuRole.vue"),
+  },
+  {
     path: "/:catchAll(.*)*",
     component: () => import("pages/ErrorNotFound.vue"),
   },
