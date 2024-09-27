@@ -1,36 +1,41 @@
 <template>
   <div class="role-mng-container">
-    <div class="role-components">
-      <ComRole @rowClick = "rowClick"></ComRole>
+    <!-- <div class="role-components">
+      <ComRole @rowClick="rowClick"></ComRole>
     </div>
     <div class="role-components">
-      <UserRole :selectedRoleId = "selectedRoleId"></UserRole>
+      <UserRole :selectedRoleId="selectedRoleId"></UserRole>
+    </div> -->
+    <div>
+      <LogAPi></LogAPi>
     </div>
   </div>
 </template>
 
 <script>
-import ComRole from './ComRole.vue';
-import UserRole from './UserRole.vue';
+import ComRole from "./ComRole.vue";
+import UserRole from "./UserRole.vue";
+import LogAPi from "../LogAPI/LogAPi.vue";
 
 export default {
   components: {
-    ComRole,
-    UserRole
+    // ComRole,
+    // UserRole,
+    LogAPi,
   },
 
   data() {
     return {
       selectedRoleId: null,
-    }
+    };
   },
 
   methods: {
-    rowClick(roleId){
+    rowClick(roleId) {
       this.selectedRoleId = roleId;
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
