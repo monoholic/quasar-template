@@ -46,9 +46,9 @@ const routes = [
     component: () => import("layouts/LogManageLayout.vue"),
   },
   {
-    name: "/userChange",
-    path: "/userChange",
-    component: () => import("/src/pages/Users/UserMng.vue"),
+    name: "/excel",
+    path: "/excel",
+    component: () => import("/src/pages/Excel/ExcelTemplate.vue"),
   },
   {
     path: "/:catchAll(.*)*",
