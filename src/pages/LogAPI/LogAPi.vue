@@ -17,12 +17,13 @@
         v-model:pagination="pagination"
         @request="onRequest"
         :rows-per-page-options="[20]"
+        wrap-cells
       >
         <!-- 탑 버튼 -->
         <template v-slot:top>
           <q-card style="width: 100%">
             <!-- 검색 영역 -->
-            <q-card-section class="search-section" align="rigth">
+            <q-card-section class="search-section" align="left">
               <q-input
                 class="search-input"
                 dense
@@ -31,7 +32,6 @@
                 v-model="search.userId"
                 @keyup:enter="setTableData()"
               />
-              <q-space />
 
               <!-- 시작일 -->
               <q-input
@@ -52,7 +52,6 @@
                     >
                       <q-date
                         v-model="search.dateFrom"
-                        today-btn
                         :options="dateFromRange"
                       >
                         <div class="row items-center justify-end">
@@ -69,8 +68,6 @@
                 </template>
               </q-input>
 
-              <q-space />
-
               <!-- 종료일 -->
               <q-input
                 class="search-date"
@@ -80,7 +77,6 @@
                 mask="date"
                 :rules="['date']"
                 label="종료일"
-                @change="valDate()"
               >
                 <template v-slot:append>
                   <q-icon name="event" class="cursor-pointer">
@@ -89,11 +85,7 @@
                       transition-show="scale"
                       transition-hide="scale"
                     >
-                      <q-date
-                        v-model="search.dateTo"
-                        today-btn
-                        :options="dateToRange"
-                      >
+                      <q-date v-model="search.dateTo" :options="dateToRange">
                         <div class="row items-center justify-end">
                           <q-btn
                             v-close-popup
@@ -155,6 +147,7 @@ export default {
           name: "index",
           label: "#",
           field: "index",
+          headerStyle: "width:2%",
         },
         {
           name: "menuId",
@@ -163,13 +156,15 @@ export default {
           align: "center",
           field: "menuId",
           sortable: true,
+          headerStyle: "width:10%",
         },
         {
           name: "gubun",
-          align: "left",
+          align: "center",
           label: "구분",
           field: "gubun",
           sortable: true,
+          headerStyle: "width:8%",
         },
         {
           name: "gubunDet",
@@ -177,13 +172,23 @@ export default {
           label: "상세구분",
           field: "gubunDet",
           sortable: true,
+          headerStyle: "width:10%",
         },
         {
-          name: "sqltxt",
+          name: "sqlTxt",
           align: "center",
           label: "SQL",
-          field: "sqltxt",
+          field: "sqlTxt",
           sortable: true,
+          headerStyle: "width:25%",
+        },
+        {
+          name: "params",
+          align: "center",
+          label: "파라미터",
+          field: "params",
+          sortable: true,
+          headerStyle: "width:20%",
         },
         {
           name: "userId",
@@ -191,6 +196,7 @@ export default {
           label: "접근사용자",
           field: "userId",
           sortable: true,
+          headerStyle: "width:10%",
         },
         {
           name: "accessTime",
@@ -198,6 +204,7 @@ export default {
           label: "접근시간",
           field: "accessTime",
           sortable: true,
+          headerStyle: "width:15%",
         },
       ],
 
@@ -207,8 +214,8 @@ export default {
       // 검색쿼리
       search: {
         userId: null,
-        dateFrom: Date.now(),
-        dateTo: Date.now(),
+        dateFrom: null,
+        dateTo: null,
       },
 
       // 테이블 내용변경(sort, page)
@@ -227,19 +234,43 @@ export default {
   methods: {
     // 테이블 초기 데이터 세팅
     setTableData() {
+      // 종료일 +1 작업
+      let date = new Date(this.search.dateTo);
+      let date2 = new Date(date.setDate(date.getDate() + 1));
+
+      const year = date2.getFullYear();
+      let month = date2.getMonth() + 1;
+      let day = date2.getDate();
+
+      if (month < 10) month = "0" + month;
+      if (day < 10) day = "0" + day;
+
+      const dateTo = year + "/" + month + "/" + day;
+
       const params = {
         sortBy: this.pagination.sortBy,
         descending: this.pagination.descending === true ? "dc" : "ac",
         page: this.pagination.page,
         numOfRows: this.pagination.rowsPerPage,
-        search: {
-          userId: this.search.userId,
-        },
+        userId: this.search.userId,
+        dateFrom: this.search.dateFrom,
+        dateTo: dateTo,
       };
 
-      console.log("params ::: ", params);
-      // 서버 통신
-      this.rowsSet();
+      api
+        .post("/logManage/getLogList", params)
+        .then((res) => {
+          this.rows = res.data.data.resList;
+          console.log(res.data.data.resList);
+          this.pagination.rowsNumber = res.data.data.total;
+          this.rowsSet();
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+        .finally(() => {
+          this.rowsSet();
+        });
     },
 
     // 데이터에 값 추가
@@ -307,8 +338,8 @@ export default {
   },
 
   created() {
-    this.setTableData();
     this.todaySet();
+    this.setTableData();
   },
 };
 </script>
@@ -324,10 +355,11 @@ export default {
 }
 
 .search-input {
-  width: 49%;
+  width: 20%;
 }
 
 .search-date {
-  width: 20%;
+  margin-left: 2%;
+  width: 10%;
 }
 </style>

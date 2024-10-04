@@ -1,5 +1,4 @@
 <template>
-
   <div class="main-title">
     {{ mainTitle }}
   </div>
@@ -8,7 +7,8 @@
     <q-card-section>
       <!-- 테이블 -->
       <q-table
-        flat bordered
+        flat
+        bordered
         title="Treats"
         :rows="rows"
         :columns="columns"
@@ -20,33 +20,58 @@
         @request="onRequest"
         :rows-per-page-options="[20]"
       >
-
         <!-- 탑 버튼 -->
         <template v-slot:top>
-          <q-card style="width:100%">
+          <q-card style="width: 100%">
             <!-- 검색 영역 -->
             <q-card-section class="search-section">
-              <q-input class="search-input" dense color="primary" label="Dessert(100g serving)" v-model="search.name"/>
-              <q-input class="search-input" dense color="primary" label="Calories" v-model="search.calories"/>
-              <q-input class="search-input" dense color="primary" label="1"/>
-              <q-input class="search-input" dense color="primary" label="2"/>
-              <q-input class="search-input" dense color="primary" label="3"/>
+              <q-input
+                class="search-input"
+                dense
+                color="primary"
+                label="Dessert(100g serving)"
+                v-model="search.name"
+              />
+              <q-input
+                class="search-input"
+                dense
+                color="primary"
+                label="Calories"
+                v-model="search.calories"
+              />
+              <q-input class="search-input" dense color="primary" label="1" />
+              <q-input class="search-input" dense color="primary" label="2" />
+              <q-input class="search-input" dense color="primary" label="3" />
             </q-card-section>
 
             <q-card-section class="search-section">
-              <q-input class="search-input" dense color="primary" label="4"/>
-              <q-input class="search-input" dense color="primary" label="5"/>
-              <q-input class="search-input" dense color="primary" label="6"/>
-              <q-input class="search-input" dense color="primary" label="7"/>
-              <q-input class="search-input" dense color="primary" label="8"/>
+              <q-input class="search-input" dense color="primary" label="4" />
+              <q-input class="search-input" dense color="primary" label="5" />
+              <q-input class="search-input" dense color="primary" label="6" />
+              <q-input class="search-input" dense color="primary" label="7" />
+              <q-input class="search-input" dense color="primary" label="8" />
             </q-card-section>
-            
+
             <!-- 검색, 추가, 삭제 버튼 -->
-            <q-card-actions align='right'>
-              <q-btn color="primary" label="Search" @click="setTableData()"></q-btn>
+            <q-card-actions align="right">
+              <q-btn
+                color="primary"
+                label="Search"
+                @click="setTableData()"
+              ></q-btn>
               <q-space />
-              <q-btn color="primary" label="Add" @click="formOpen('add')"></q-btn>
-              <q-btn v-if="rows.length !== 0" class="q-ml-sm" color="primary" label="Remove" @click="removeMethod"></q-btn>
+              <q-btn
+                color="primary"
+                label="Add"
+                @click="formOpen('add')"
+              ></q-btn>
+              <q-btn
+                v-if="rows.length !== 0"
+                class="q-ml-sm"
+                color="primary"
+                label="Remove"
+                @click="removeMethod"
+              ></q-btn>
             </q-card-actions>
           </q-card>
         </template>
@@ -55,7 +80,12 @@
         <template v-slot:body-cell-edit="item">
           <q-td :props="item">
             <div>
-              <q-icon name="edit" size="1.5em" @click="editMethod(item)" style="cursor: pointer;"></q-icon>
+              <q-icon
+                name="edit"
+                size="1.5em"
+                @click="editMethod(item)"
+                style="cursor: pointer"
+              ></q-icon>
             </div>
           </q-td>
         </template>
@@ -74,7 +104,6 @@
             @update:model-value="changePage"
           />
         </template>
-
       </q-table>
     </q-card-section>
   </q-card>
@@ -85,26 +114,32 @@
       <q-card v-show="modalToggle" @mousedown="startDrag">
         <div class="form-container" v-show="formToggle">
           <q-card-actions>
-
-            <q-input v-model="editedItem.name" label="Dessert (100g serving)" :readonly="readonly" />
-            <q-space/>
+            <q-input
+              v-model="editedItem.name"
+              label="Dessert (100g serving)"
+              :readonly="readonly"
+            />
+            <q-space />
             <q-input filled v-model="editedItem.calories" label="Calories" />
-            <q-space/>
+            <q-space />
             <q-input outlined v-model="editedItem.fat" label="Fat (g)" />
-            
-            <q-input standout v-model="editedItem.carbs" label="Carbs (g)" />
-            <q-space/>
-            <q-input standout v-model="editedItem.protein" label="Protein (g)" />
-            <q-space/>
-            <q-space/>
-            <q-space/>
-            <q-space/>
-            <q-space/>
-            <q-space/>
 
+            <q-input standout v-model="editedItem.carbs" label="Carbs (g)" />
+            <q-space />
+            <q-input
+              standout
+              v-model="editedItem.protein"
+              label="Protein (g)"
+            />
+            <q-space />
+            <q-space />
+            <q-space />
+            <q-space />
+            <q-space />
+            <q-space />
           </q-card-actions>
 
-          <q-separator/>
+          <q-separator />
 
           <q-card-actions align="right">
             <q-btn color="primary" label="CANCEL" @click="closeModal"></q-btn>
@@ -119,7 +154,11 @@
           <q-card-actions align="center">
             <q-btn color="primary" label="CANCEL" @click="closeModal"></q-btn>
             <q-btn color="primary" label="CONFIRM" @click="delteData"></q-btn>
-            <q-btn color="primary" label="CHECK_LIST" @click="checkDeleteItemToggle = !checkDeleteItemToggle"></q-btn>
+            <q-btn
+              color="primary"
+              label="CHECK_LIST"
+              @click="checkDeleteItemToggle = !checkDeleteItemToggle"
+            ></q-btn>
           </q-card-actions>
 
           <q-separator inset />
@@ -131,11 +170,10 @@
       </q-card>
     </div>
   </div>
-
 </template>
 
 <script>
-import { api } from 'src/boot/axios';
+import { api } from "src/boot/axios";
 
 export default {
   data() {
@@ -146,331 +184,361 @@ export default {
       // 테이블 헤더
       columns: [
         {
-          name: 'index',
-          label: '#',
-          field: 'index'
+          name: "index",
+          label: "#",
+          field: "index",
         },
         {
-          name: 'name',
+          name: "name",
           required: true,
-          label: 'Dessert (100g serving)',
-          align: 'left',
-          field: 'name',
-          sortable: true
+          label: "Dessert (100g serving)",
+          align: "left",
+          field: "name",
+          sortable: true,
         },
-        { name: 'calories', align: 'left', label: 'Calories', field: 'calories', sortable: true },
-        { name: 'fat', align: 'center', label: 'Fat (g)', field: 'fat', sortable: true },
-        { name: 'carbs', label: 'Carbs (g)', field: 'carbs' },
-        { name: 'protein', label: 'Protein (g)', field: 'protein' },
-        { name: 'sodium', label: 'Sodium (mg)', field: 'sodium' },
-        { name: 'calcium', label: 'Calcium (%)', field: 'calcium', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) },
-        { name: 'iron', label: 'Iron (%)', field: 'iron', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) },
-        { name: 'edit', align: 'center', label: 'Edit', field: 'edit', sortable: false }
+        {
+          name: "calories",
+          align: "left",
+          label: "Calories",
+          field: "calories",
+          sortable: true,
+        },
+        {
+          name: "fat",
+          align: "center",
+          label: "Fat (g)",
+          field: "fat",
+          sortable: true,
+        },
+        { name: "carbs", label: "Carbs (g)", field: "carbs" },
+        { name: "protein", label: "Protein (g)", field: "protein" },
+        { name: "sodium", label: "Sodium (mg)", field: "sodium" },
+        {
+          name: "calcium",
+          label: "Calcium (%)",
+          field: "calcium",
+          sortable: true,
+          sort: (a, b) => parseInt(a, 10) - parseInt(b, 10),
+        },
+        {
+          name: "iron",
+          label: "Iron (%)",
+          field: "iron",
+          sortable: true,
+          sort: (a, b) => parseInt(a, 10) - parseInt(b, 10),
+        },
+        {
+          name: "edit",
+          align: "center",
+          label: "Edit",
+          field: "edit",
+          sortable: false,
+        },
       ],
 
       // 테이블 데이터
       rows: [
         {
-          name: 'Frozen Yogurt',
+          name: "Frozen Yogurt",
           calories: 159,
           fat: 6.0,
           carbs: 24,
           protein: 4.0,
           sodium: 87,
-          calcium: '14%',
-          iron: '1%'
+          calcium: "14%",
+          iron: "1%",
         },
         {
-          name: 'Ice cream sandwich',
+          name: "Ice cream sandwich",
           calories: 237,
           fat: 9.0,
           carbs: 37,
           protein: 4.3,
           sodium: 129,
-          calcium: '8%',
-          iron: '1%'
+          calcium: "8%",
+          iron: "1%",
         },
         {
-          name: 'Eclair',
+          name: "Eclair",
           calories: 262,
           fat: 16.0,
           carbs: 23,
           protein: 6.0,
           sodium: 337,
-          calcium: '6%',
-          iron: '7%'
+          calcium: "6%",
+          iron: "7%",
         },
         {
-          name: 'Cupcake',
+          name: "Cupcake",
           calories: 305,
           fat: 3.7,
           carbs: 67,
           protein: 4.3,
           sodium: 413,
-          calcium: '3%',
-          iron: '8%'
+          calcium: "3%",
+          iron: "8%",
         },
         {
-          name: 'Gingerbread',
+          name: "Gingerbread",
           calories: 356,
           fat: 16.0,
           carbs: 49,
           protein: 3.9,
           sodium: 327,
-          calcium: '7%',
-          iron: '16%'
+          calcium: "7%",
+          iron: "16%",
         },
         {
-          name: 'Jelly bean',
+          name: "Jelly bean",
           calories: 375,
           fat: 0.0,
           carbs: 94,
           protein: 0.0,
           sodium: 50,
-          calcium: '0%',
-          iron: '0%'
+          calcium: "0%",
+          iron: "0%",
         },
         {
-          name: 'Lollipop',
+          name: "Lollipop",
           calories: 392,
           fat: 0.2,
           carbs: 98,
           protein: 0,
           sodium: 38,
-          calcium: '0%',
-          iron: '2%'
+          calcium: "0%",
+          iron: "2%",
         },
         {
-          name: 'Honeycomb',
+          name: "Honeycomb",
           calories: 408,
           fat: 3.2,
           carbs: 87,
           protein: 6.5,
           sodium: 562,
-          calcium: '0%',
-          iron: '45%'
+          calcium: "0%",
+          iron: "45%",
         },
         {
-          name: 'Donut',
+          name: "Donut",
           calories: 452,
           fat: 25.0,
           carbs: 51,
           protein: 4.9,
           sodium: 326,
-          calcium: '2%',
-          iron: '22%'
+          calcium: "2%",
+          iron: "22%",
         },
         {
-          name: 'KitKat',
+          name: "KitKat",
           calories: 518,
           fat: 26.0,
           carbs: 65,
           protein: 7,
           sodium: 54,
-          calcium: '12%',
-          iron: '6%'
+          calcium: "12%",
+          iron: "6%",
         },
 
         {
-          name: 'Frozen Yogurt2',
+          name: "Frozen Yogurt2",
           calories: 159,
           fat: 6.0,
           carbs: 24,
           protein: 4.0,
           sodium: 87,
-          calcium: '14%',
-          iron: '1%'
+          calcium: "14%",
+          iron: "1%",
         },
         {
-          name: 'Ice cream sandwich2',
+          name: "Ice cream sandwich2",
           calories: 237,
           fat: 9.0,
           carbs: 37,
           protein: 4.3,
           sodium: 129,
-          calcium: '8%',
-          iron: '1%'
+          calcium: "8%",
+          iron: "1%",
         },
         {
-          name: 'Eclair2',
+          name: "Eclair2",
           calories: 262,
           fat: 16.0,
           carbs: 23,
           protein: 6.0,
           sodium: 337,
-          calcium: '6%',
-          iron: '7%'
+          calcium: "6%",
+          iron: "7%",
         },
         {
-          name: 'Cupcake2',
+          name: "Cupcake2",
           calories: 305,
           fat: 3.7,
           carbs: 67,
           protein: 4.3,
           sodium: 413,
-          calcium: '3%',
-          iron: '8%'
+          calcium: "3%",
+          iron: "8%",
         },
         {
-          name: 'Gingerbread2',
+          name: "Gingerbread2",
           calories: 356,
           fat: 16.0,
           carbs: 49,
           protein: 3.9,
           sodium: 327,
-          calcium: '7%',
-          iron: '16%'
+          calcium: "7%",
+          iron: "16%",
         },
         {
-          name: 'Jelly bean2',
+          name: "Jelly bean2",
           calories: 375,
           fat: 0.0,
           carbs: 94,
           protein: 0.0,
           sodium: 50,
-          calcium: '0%',
-          iron: '0%'
+          calcium: "0%",
+          iron: "0%",
         },
         {
-          name: 'Lollipop2',
+          name: "Lollipop2",
           calories: 392,
           fat: 0.2,
           carbs: 98,
           protein: 0,
           sodium: 38,
-          calcium: '0%',
-          iron: '2%'
+          calcium: "0%",
+          iron: "2%",
         },
         {
-          name: 'Honeycomb2',
+          name: "Honeycomb2",
           calories: 408,
           fat: 3.2,
           carbs: 87,
           protein: 6.5,
           sodium: 562,
-          calcium: '0%',
-          iron: '45%'
+          calcium: "0%",
+          iron: "45%",
         },
         {
-          name: 'Donut2',
+          name: "Donut2",
           calories: 452,
           fat: 25.0,
           carbs: 51,
           protein: 4.9,
           sodium: 326,
-          calcium: '2%',
-          iron: '22%'
+          calcium: "2%",
+          iron: "22%",
         },
         {
-          name: 'KitKat2',
+          name: "KitKat2",
           calories: 518,
           fat: 26.0,
           carbs: 65,
           protein: 7,
           sodium: 54,
-          calcium: '12%',
-          iron: '6%'
+          calcium: "12%",
+          iron: "6%",
         },
 
         {
-          name: 'Frozen Yogurt3',
+          name: "Frozen Yogurt3",
           calories: 159,
           fat: 6.0,
           carbs: 24,
           protein: 4.0,
           sodium: 87,
-          calcium: '14%',
-          iron: '1%'
+          calcium: "14%",
+          iron: "1%",
         },
         {
-          name: 'Ice cream sandwich3',
+          name: "Ice cream sandwich3",
           calories: 237,
           fat: 9.0,
           carbs: 37,
           protein: 4.3,
           sodium: 129,
-          calcium: '8%',
-          iron: '1%'
+          calcium: "8%",
+          iron: "1%",
         },
         {
-          name: 'Eclair3',
+          name: "Eclair3",
           calories: 262,
           fat: 16.0,
           carbs: 23,
           protein: 6.0,
           sodium: 337,
-          calcium: '6%',
-          iron: '7%'
+          calcium: "6%",
+          iron: "7%",
         },
         {
-          name: 'Cupcake3',
+          name: "Cupcake3",
           calories: 305,
           fat: 3.7,
           carbs: 67,
           protein: 4.3,
           sodium: 413,
-          calcium: '3%',
-          iron: '8%'
+          calcium: "3%",
+          iron: "8%",
         },
         {
-          name: 'Gingerbread3',
+          name: "Gingerbread3",
           calories: 356,
           fat: 16.0,
           carbs: 49,
           protein: 3.9,
           sodium: 327,
-          calcium: '7%',
-          iron: '16%'
+          calcium: "7%",
+          iron: "16%",
         },
         {
-          name: 'Jelly bean3',
+          name: "Jelly bean3",
           calories: 375,
           fat: 0.0,
           carbs: 94,
           protein: 0.0,
           sodium: 50,
-          calcium: '0%',
-          iron: '0%'
+          calcium: "0%",
+          iron: "0%",
         },
         {
-          name: 'Lollipop3',
+          name: "Lollipop3",
           calories: 392,
           fat: 0.2,
           carbs: 98,
           protein: 0,
           sodium: 38,
-          calcium: '0%',
-          iron: '2%'
+          calcium: "0%",
+          iron: "2%",
         },
         {
-          name: 'Honeycomb3',
+          name: "Honeycomb3",
           calories: 408,
           fat: 3.2,
           carbs: 87,
           protein: 6.5,
           sodium: 562,
-          calcium: '0%',
-          iron: '45%'
+          calcium: "0%",
+          iron: "45%",
         },
         {
-          name: 'Donut3',
+          name: "Donut3",
           calories: 452,
           fat: 25.0,
           carbs: 51,
           protein: 4.9,
           sodium: 326,
-          calcium: '2%',
-          iron: '22%'
+          calcium: "2%",
+          iron: "22%",
         },
         {
-          name: 'KitKat3',
+          name: "KitKat3",
           calories: 518,
           fat: 26.0,
           carbs: 65,
           protein: 7,
           sodium: 54,
-          calcium: '12%',
-          iron: '6%'
+          calcium: "12%",
+          iron: "6%",
         },
       ],
 
@@ -520,7 +588,7 @@ export default {
         descending: false,
         page: 1,
         rowsPerPage: 20,
-        rowsNumber: 0
+        rowsNumber: 0,
       },
 
       // 모달창 이동
@@ -529,46 +597,55 @@ export default {
       dragStartY: 0,
       modalOffsetX: 0,
       modalOffsetY: 0,
-
-    }
+    };
   },
 
   methods: {
     // 테이블 초기 데이터 세팅
-    setTableData(){
-      console.log('테이블데이터 세팅');
+    setTableData() {
+      console.log("테이블데이터 세팅");
       this.selected = [];
-      
-      const params = {
-          sortBy:  this.pagination.sortBy
-        , descending: (this.pagination.descending === true)? 'dc' : 'ac'
-        , page: this.pagination.page
-        , numOfRows: this.pagination.rowsPerPage
-        , search: {
-            name : this.search.name
-          , calories : this.search.calories
-        }
-      }
 
-      console.log('params ::: ', params);
+      const params = {
+        sortBy: this.pagination.sortBy,
+        descending: this.pagination.descending === true ? "dc" : "ac",
+        page: this.pagination.page,
+        numOfRows: this.pagination.rowsPerPage,
+        search: {
+          name: this.search.name,
+          calories: this.search.calories,
+        },
+      };
+
+      console.log("params ::: ", params);
       // 서버 통신
-      this.rowsSet();
+      /*
+      api.post("url", params)
+      .then((res) => {
+        this.rows = res.data.data.resList;
+        this.pagination.rowsNumber = res.data.data.total;
+        this.rowsSet();
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      */
     },
 
     // 데이터에 값 추가
     rowsSet() {
       this.rows.forEach((row, index) => {
-        row.index = index+1;
-        for(const [key, value] of Object.entries(row)){
-          if(`${value}` === 'null'){
-            row[`${key}`] = '-'
-          } 
+        row.index = index + 1;
+        for (const [key, value] of Object.entries(row)) {
+          if (`${value}` === "null") {
+            row[`${key}`] = "-";
+          }
         }
-      })
+      });
     },
 
-    // 수정 버튼 
-    editMethod(item){
+    // 수정 버튼
+    editMethod(item) {
       console.log(item.row);
       this.editedItem = this.$_.cloneDeep(item.row);
       this.readonly = true;
@@ -578,16 +655,16 @@ export default {
     // 추가 버튼
     formOpen(event) {
       this.modalToggle = true;
-      this.formToggle = true
-      console.log('모달오픈');
+      this.formToggle = true;
+      console.log("모달오픈");
     },
 
     // 추가, 수정, 삭제 모달창 닫기
-    closeModal(){
+    closeModal() {
       this.editedItem = this.$_.cloneDeep(this.defaultItem);
       this.deleteItem = [];
-      this.readonly = false;  
-      this.modalToggle = false;    
+      this.readonly = false;
+      this.modalToggle = false;
       this.formToggle = false;
       this.delteFormToggle = false;
       this.checkDeleteItemToggle = false;
@@ -603,11 +680,10 @@ export default {
 
     // 삭제 버튼
     removeMethod() {
-      
-      if(this.selected.length === 0){
+      if (this.selected.length === 0) {
         alert("선택된 데이터가 없습니다");
       } else {
-        console.log('삭제모달');
+        console.log("삭제모달");
         this.selected.forEach((item) => {
           this.deleteItem.push(item.name);
         });
@@ -625,8 +701,8 @@ export default {
     },
 
     // 페이지 변화에 따른 작용
-    changePage(){
-      console.log('페이지변화');
+    changePage() {
+      console.log("페이지변화");
       this.setTableData();
     },
 
@@ -670,41 +746,43 @@ export default {
       document.removeEventListener("mouseup", this.stopDrag);
     },
     // 모달창 가운데 정렬
-    replaceModal(){
+    replaceModal() {
       this.dragStartX = 0;
       this.dragStartY = 0;
       this.modalOffsetX = 0;
       this.modalOffsetY = 0;
       const formCard = this.$refs.formCard;
       formCard.style.transform = `translate(0px, 0px)`;
-    }
+    },
   },
 
   computed: {
     // 페이지 길이
     pageLength() {
-      return Math.ceil(this.pagination.rowsNumber / this.pagination.rowsPerPage) 
+      return Math.ceil(
+        this.pagination.rowsNumber / this.pagination.rowsPerPage
+      );
     },
 
     // 현재 페이지
     curPageSet() {
-      return this.pagination.page
-    }
+      return this.pagination.page;
+    },
   },
 
-  created () {
+  created() {
     this.setTableData();
   },
-}
+};
 </script>
 
 <style lang="scss" scoped>
-.main-title{
+.main-title {
   font-size: 50px;
   margin: 0.5%;
 }
 
-.delete-text{
+.delete-text {
   font-size: 30px;
 }
 
@@ -718,7 +796,7 @@ export default {
   z-index: 1000;
 }
 
-  /* dimmed */
+/* dimmed */
 .form-card {
   position: absolute;
   top: 50%;
@@ -735,7 +813,7 @@ export default {
   cursor: move;
 }
 
-.search-section{
+.search-section {
   display: flex;
 }
 
