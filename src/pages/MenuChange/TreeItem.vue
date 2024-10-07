@@ -1,65 +1,57 @@
-<script setup>
-import { ref, computed } from "vue";
-
-// 부모로부터 "model"을 props로 받음
-const props = defineProps({
-  model: Object,
-});
-
-// 이벤트를 사용해 부모에게 데이터 변경 요청
-const emit = defineEmits(["update:model"]);
-
-const isOpen = ref(false);
-const isFolder = computed(() => {
-  return props.model.children && props.model.children.length;
-});
-
-function toggle() {
-  isOpen.value = !isOpen.value;
-}
-
-function changeType() {
-  if (!isFolder.value) {
-    // "children" 배열을 부모에 알려서 업데이트 요청
-    emit("update:model", {
-      ...props.model,
-      children: [{ name: "new stuff" }],
-    });
-    isOpen.value = true;
-  }
-}
-
-function addChild() {
-  // 새로운 자식을 추가하도록 부모에게 요청
-  const updatedChildren = [...props.model.children, { name: "new stuff" }];
-  emit("update:model", {
-    ...props.model,
-    children: updatedChildren,
-  });
-}
+<script>
+export default {
+  name: "TreeItem",
+  props: {
+    model: {
+      type: Object,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      isOpen: false, // 트리의 열림/닫힘 상태를 관리
+    };
+  },
+  computed: {
+    isFolder() {
+      return this.model.children && this.model.children.length;
+    },
+  },
+  methods: {
+    toggle() {
+      this.isOpen = !this.isOpen;
+      this.$emit("menu-selected", this.model);
+    },
+    selectMenu() {
+      // 메뉴 선택 시 부모 컴포넌트에 선택된 메뉴를 전달
+    },
+  },
+};
 </script>
 
 <template>
   <li>
-    <div :class="{ bold: isFolder }" @click="toggle" @dblclick="changeType">
+    <!-- 트리 항목. 클릭 시 열림/닫힘, 더블 클릭 시 메뉴 선택 -->
+    <div :class="{ bold: isFolder }" @click="toggle" @dblclick="selectMenu">
       {{ model.name }}
       <span v-if="isFolder">[{{ isOpen ? "-" : "+" }}]</span>
     </div>
+
+    <!-- 하위 트리 항목을 재귀적으로 렌더링 -->
     <ul v-show="isOpen" v-if="isFolder">
-      <!-- TreeItem을 재귀적으로 렌더링 -->
       <TreeItem
         class="item"
         v-for="(childModel, index) in model.children"
         :model="childModel"
         :key="index"
-        @update:model="
-          (updatedChild) => {
-            const updatedChildren = [...model.children];
-            updatedChildren[index] = updatedChild;
-            emit('update:model', { ...model, children: updatedChildren });
-          }
-        "
+        @menu-selected="$emit('menu-selected', $event)"
       />
     </ul>
   </li>
 </template>
+
+<style scoped>
+.bold {
+  font-weight: bold;
+}
+</style>

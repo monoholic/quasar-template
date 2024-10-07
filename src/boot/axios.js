@@ -18,7 +18,8 @@ api.interceptors.request.use(
   (request) => {
     const accessToken = localStorage.getItem("accessToken");
     request.headers["accessToken"] = accessToken;
-
+    //console.log("요청 api");
+    //console.log(accessToken);
     return request;
   },
   (error) => {
@@ -33,11 +34,11 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => {
     const accessToken = response.headers.access;
-    console.log(accessToken);
+    //console.log("응답 api");
+    //console.log(accessToken);
     if (accessToken) {
       localStorage.setItem("accessToken", accessToken);
     }
-    console.log(accessToken);
     return response;
   },
   async (error) => {

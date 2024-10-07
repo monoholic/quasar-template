@@ -1,6 +1,49 @@
+<template>
+  <div class="menu-component">
+    <div class="container">
+      <!-- 트리 컴포넌트 -->
+      <div class="tree-section">
+        <ul>
+          <tree-item
+            class="item"
+            :model="treeData"
+            @menu-selected="handleMenuSelect"
+          ></tree-item>
+        </ul>
+      </div>
+
+      <!-- 선택된 메뉴의 상세 정보를 보여주는 부분 -->
+      <div class="details-section" v-if="selectedMenu">
+        <h3>메뉴 상세 정보</h3>
+        <label>메뉴 ID:</label>
+        <input type="text" v-model="selectedMenu.menuId" readonly />
+        <br />
+
+        <label>메뉴 이름:</label>
+        <input type="text" v-model="selectedMenu.name" />
+        <br />
+
+        <label>URL:</label>
+        <input type="text" v-model="selectedMenu.url" />
+        <br />
+
+        <label>Route 여부:</label>
+        <select v-model="selectedMenu.routeYn">
+          <option value="Y">Y</option>
+          <option value="N">N</option>
+        </select>
+        <br />
+
+        <label>메뉴 설명:</label>
+        <input type="text" v-model="selectedMenu.description" />
+      </div>
+    </div>
+  </div>
+</template>
+
 <script>
-import { api } from "boot/axios"; // axios 인스턴스 임포트
 import TreeItem from "./TreeItem.vue"; // 트리 아이템 컴포넌트 임포트
+import { api } from "boot/axios"; // axios 인스턴스
 
 export default {
   name: "MenuComponent", // 컴포넌트 이름
@@ -9,32 +52,28 @@ export default {
   },
   data() {
     return {
-      menuList: [],
       treeData: {
         name: "Menu",
-        children: [],
+        children: [], // 트리 구조 데이터
       },
-      isDetail: false, // 상세보기 제어용 변수
+      selectedMenu: null, // 선택된 메뉴의 상세 정보
     };
   },
   mounted() {
     this.getMenuList(); // 컴포넌트가 마운트되면 메뉴 리스트를 가져옴
   },
   methods: {
-    // 메뉴 데이터를 가져옴
+    // 메뉴 데이터를 API로 가져옴
     getMenuList() {
       api
         .get("/menu/menuList")
         .then((res) => {
           if (res.data.code === 200) {
-            this.menuAppend(res.data.data); // 메뉴 데이터를 처리하는 로직
+            this.menuAppend(res.data.data); // 메뉴 데이터를 처리
           }
         })
         .catch((error) => {
           console.error(error); // 에러 처리
-        })
-        .finally(() => {
-          console.log("항상 마지막에 실행");
         });
     },
 
@@ -66,7 +105,9 @@ export default {
         this.treeData.children.push({
           menuId: menu.menuId,
           name: menu.menuNm,
-          menuLvl: menu.menuLvl,
+          url: menu.url,
+          routeYn: menu.routeYn,
+          description: menu.description,
           children: [],
         });
       });
@@ -76,7 +117,9 @@ export default {
           const childMenu = {
             menuId: menu.menuId,
             name: menu.menuNm,
-            menuLvl: menu.menuLvl,
+            url: menu.url,
+            routeYn: menu.routeYn,
+            description: menu.description,
             children: [],
           };
 
@@ -88,55 +131,46 @@ export default {
           );
         }
       });
-      console.log(this.treeData.children); // 트리 구조 확인
     },
-    test() {
-      console.log(this.treeData.children);
+
+    // 트리에서 선택된 메뉴의 상세 정보 가져오기
+    handleMenuSelect(selectedMenu) {
+      this.selectedMenu = selectedMenu;
     },
   },
 };
 </script>
 
-<template>
-  <ul>
-    <TreeItem class="item" :model="treeData" v-on:click="test"></TreeItem>
-  </ul>
-  <div
-    v-show="isDetail"
-    style="flex: 1; padding: 10px; border-left: 1px solid #ccc"
-  >
-    <div>
-      <label>메뉴 ID:</label>
-      <input type="text" readonly />
-      <br />
+<style scoped>
+.menu-component {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
 
-      <label>메뉴 이름:</label>
-      <input type="text" />
-      <br />
+.container {
+  display: flex;
+  width: 100%;
+  max-width: 1200px;
+  border: 1px solid #ccc;
+}
 
-      <label>URL:</label>
-      <input type="text" />
-      <br />
+.tree-section {
+  flex: 1;
+  padding: 10px;
+  border-right: 1px solid #ccc;
+  overflow-y: auto; /* 트리 메뉴가 길어질 경우 스크롤 가능하게 */
+}
 
-      <label>Route 여부:</label>
-      <select>
-        <option value="Y">Y</option>
-        <option value="N">N</option>
-      </select>
-      <br />
+.details-section {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto; /* 상세 정보가 많아질 경우 스크롤 가능하게 */
+}
 
-      <label>메뉴 설명:</label>
-      <input type="text" />
-    </div>
-  </div>
-</template>
-
-<style>
 .item {
   cursor: pointer;
   line-height: 1.5;
-}
-.bold {
-  font-weight: bold;
 }
 </style>
