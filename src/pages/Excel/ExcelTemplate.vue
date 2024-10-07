@@ -98,6 +98,7 @@
         <div>
           <input
             type="file"
+            id="uploadFile"
             @change="handleFileUpload"
             accept=".xlsx, .xls"
             method="POST"
@@ -207,7 +208,7 @@ export default {
         {
           sawonNo: "1234567",
           sawonNm: "홍길동",
-          startDate: "240927",
+          startDate: "20240927",
           startTime: "080000",
           endTime: "170000",
           cause: "TEST",
@@ -256,6 +257,7 @@ export default {
 
     // 모달창 닫기
     closeModal() {
+      document.getElementById("uploadFile").value = "";
       this.editedItem = this.$_.cloneDeep(this.scope);
       this.readonly = false;
       this.modalToggle = false;
@@ -291,9 +293,13 @@ export default {
           },
         });
         console.log(response.data);
+        alert("업로드에 성공했습니다.");
       } catch (error) {
         console.error("Error uploading data:", error);
+        alert("업로드에 실패했습니다.");
       }
+
+      this.closeModal();
     },
 
     // 다운로드
