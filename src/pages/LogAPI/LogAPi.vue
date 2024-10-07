@@ -30,7 +30,7 @@
                 color="primary"
                 label="사용자ID 검색"
                 v-model="search.userId"
-                @keyup:enter="setTableData()"
+                @keyup.enter="setTableData()"
               />
 
               <!-- 시작일 -->
