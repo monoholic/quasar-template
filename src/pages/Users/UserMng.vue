@@ -118,13 +118,19 @@
               v-model="editedItem.userId"
               label-slot
               :readonly="readonly"
+              hint=""
             >
               <template v-slot:label>
                 <span>사용자ID</span><span class="requiredLabel"> *</span>
               </template>
             </q-input>
             <q-space />
-            <q-input class="form-node" v-model="editedItem.userNm" label-slot>
+            <q-input
+              class="form-node"
+              v-model="editedItem.userNm"
+              label-slot
+              hint=""
+            >
               <template v-slot:label>
                 <span>사용자명</span><span class="requiredLabel"> *</span>
               </template>
@@ -135,6 +141,7 @@
               v-model="editedItem.useYn"
               :options="useYnOption2"
               label-slot
+              hint=""
             >
               <template v-slot:label>
                 <span>사용 구분</span><span class="requiredLabel"> *</span>
@@ -144,31 +151,40 @@
             <q-input
               class="form-node"
               v-model="editedItem.telNo"
+              placeholder="000-0000-0000"
               label="전화번호"
+              :hint="telVal"
+              hide-hint
             />
             <q-space />
             <q-input
               class="form-node"
               v-model="editedItem.email"
-              label="이메일"
+              placeholder="email@abc.com"
+              label="e-mail"
+              :hint="emailVal"
+              hide-hint
             />
             <q-space />
             <q-input
               class="form-node"
               v-model="editedItem.gender"
               label="성별"
+              hint=""
             />
 
             <q-input
               class="form-node"
               v-model="editedItem.deptNm"
               label="부서"
+              hint=""
             />
             <q-space />
             <q-input
               class="form-node"
               v-model="editedItem.jikgyub"
               label="직급"
+              hint=""
             />
             <q-space /><q-space /><q-space /><q-space /><q-space /><q-space />
           </q-card-actions>
@@ -415,6 +431,10 @@ export default {
       passwordCheck: null,
       readonly: false,
 
+      // 전화번호, 이메일 저장 유효성
+      telValCheck: true,
+      emailValCheck: true,
+
       // 검색쿼리
       search: {
         userId: null,
@@ -561,6 +581,15 @@ export default {
         return;
       }
 
+      if (!this.telValCheck) {
+        alert("전화번호 형식이 맞지 않습니다.");
+        return;
+      }
+      if (!this.emailValCheck) {
+        alert("이메일 형식이 맞지 않습니다.");
+        return;
+      }
+
       this.editedItem.useYn = this.editedItem.useYn.value;
 
       // 서버통신
@@ -578,6 +607,14 @@ export default {
 
           if (err.code === "ERR_BAD_REQUEST") alert("이미 아이디가 있습니다.");
         });
+    },
+
+    // 전화번호 및 이메일 유효성 체크
+    telValCheck2(flag) {
+      this.telValCheck = flag;
+    },
+    emailValCheck2(flag) {
+      this.emailValCheck = flag;
     },
 
     // 패스워드 모달
@@ -719,6 +756,39 @@ export default {
       let str =
         this.editedItem.addMod === "A" ? "비밀번호 설정" : "비밀번호 변경";
       return str;
+    },
+
+    // 이메일 유효성 검사
+    emailVal() {
+      const regEmail =
+        /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+      if (
+        regEmail.test(this.editedItem.email) ||
+        this.editedItem.email === null ||
+        this.editedItem.email === ""
+      ) {
+        this.emailValCheck2(true);
+        return null;
+      } else {
+        this.emailValCheck2(false);
+        return "이메일 형식에 맞지 않습니다.";
+      }
+    },
+
+    // 전화번호 유효성 검사
+    telVal() {
+      const regTel = /^01([0|1|6|7|8|9])-([0-9]{3,4})-([0-9]{4})$/;
+      if (
+        regTel.test(this.editedItem.telNo) ||
+        this.editedItem.telNo === null ||
+        this.editedItem.telNo === ""
+      ) {
+        this.telValCheck2(true);
+        return null;
+      } else {
+        this.telValCheck2(false);
+        return "형식에 맞지 않습니다.";
+      }
     },
   },
 

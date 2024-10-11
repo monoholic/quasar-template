@@ -165,6 +165,7 @@
             <q-input
               class="form-node"
               v-model="editedItem.sortOdr"
+              type="number"
               label="정렬 순서"
             />
             <q-space />

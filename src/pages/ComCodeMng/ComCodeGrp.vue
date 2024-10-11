@@ -148,6 +148,7 @@
             <q-input
               class="form-node"
               v-model="editedItem.sortOrd"
+              type="number"
               label="정렬순서"
             />
             <q-space />

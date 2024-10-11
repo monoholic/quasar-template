@@ -1,5 +1,4 @@
 <template>
-
   <div class="main-title">
     {{ mainTitle }}
   </div>
@@ -8,7 +7,8 @@
     <q-card-section>
       <!-- 테이블 -->
       <q-table
-        flat bordered
+        flat
+        bordered
         title="Treats"
         :rows="rows"
         :columns="columns"
@@ -20,23 +20,41 @@
         @request="onRequest"
         :rows-per-page-options="[20]"
       >
-
         <!-- 탑 버튼 -->
         <template v-slot:top>
-          <q-card style="width:100%">
+          <q-card style="width: 100%">
             <!-- 검색 영역 -->
             <q-card-section class="search-section">
-              <q-input class="search-input" color="primary" label="사용자ID 검색" v-model="search.txt" @keyup.enter="setTableData()"/>
+              <q-input
+                class="search-input"
+                color="primary"
+                label="사용자ID 검색"
+                v-model="search.txt"
+                @keyup.enter="setTableData()"
+              />
               &nbsp;&nbsp;&nbsp;
-              <q-select class="search-select2" v-model="search.useYn" :options="useYnOpts" label="사용 유무" />
+              <q-select
+                class="search-select2"
+                v-model="search.useYn"
+                :options="useYnOpts"
+                label="사용 유무"
+              />
             </q-card-section>
 
             <!-- 검색, 추가, 삭제 버튼 -->
-            <q-card-actions align='right' v-if="selectedRoleId != null">
-              <q-btn color="primary" label="Search" @click="setTableData()"></q-btn>
+            <q-card-actions align="right" v-if="selectedRoleId != null">
+              <q-btn
+                color="primary"
+                label="Search"
+                @click="setTableData()"
+              ></q-btn>
               <q-space />
               <q-btn color="primary" label="Add" @click="formOpen()"></q-btn>
-              <q-btn color="primary" label="Remove" @click="removeMethod"></q-btn>
+              <q-btn
+                color="primary"
+                label="Remove"
+                @click="removeMethod"
+              ></q-btn>
             </q-card-actions>
           </q-card>
         </template>
@@ -45,7 +63,12 @@
         <template v-slot:body-cell-edit="item">
           <q-td :props="item">
             <div>
-              <q-icon name="edit" size="1.5em" @click="editMethod(item)" style="cursor: pointer;"></q-icon>
+              <q-icon
+                name="edit"
+                size="1.5em"
+                @click="editMethod(item)"
+                style="cursor: pointer"
+              ></q-icon>
             </div>
           </q-td>
         </template>
@@ -64,7 +87,6 @@
             @update:model-value="changePage"
           />
         </template>
-
       </q-table>
     </q-card-section>
   </q-card>
@@ -75,29 +97,49 @@
       <q-card v-show="modalToggle" @mousedown="startDrag">
         <div class="form-container" v-show="formToggle">
           <q-card-actions>
-            <q-input class="form-node" v-model="editedItem.userId" label-slot :readonly="true">
+            <q-input
+              class="form-node"
+              v-model="editedItem.userId"
+              label-slot
+              :readonly="true"
+            >
               <template v-slot:label>
                 <span>사용자ID</span><span class="requiredLabel"> *</span>
               </template>
             </q-input>
-            <q-space/>
-            <q-btn color="primary" label="검색" @click="userSearch = !userSearch" v-show="addForm"></q-btn>
-            <q-space/><q-space/><q-space/><q-space/><q-space/><q-space/><q-space/><q-space/><q-space/><q-space/><q-space/><q-space/><q-space/><q-space/><q-space/><q-space/><q-space/>
+            <q-space />
+            <q-btn
+              color="primary"
+              label="검색"
+              @click="userSearch = !userSearch"
+              v-show="addForm"
+            ></q-btn>
+            <q-space /><q-space /><q-space /><q-space /><q-space /><q-space /><q-space /><q-space /><q-space /><q-space /><q-space /><q-space /><q-space /><q-space /><q-space /><q-space /><q-space />
           </q-card-actions>
 
-          <q-card-actions>  
-            <q-input class="form-node" v-model="editedItem.roleId" label-slot :readonly=true>
+          <q-card-actions>
+            <q-input
+              class="form-node"
+              v-model="editedItem.roleId"
+              label-slot
+              :readonly="true"
+            >
               <template v-slot:label>
                 <span>권한 코드</span><span class="requiredLabel"> *</span>
               </template>
             </q-input>
-            <q-space/>
-            <q-select class="form-node" v-model="editedItem.useYn" :options="useYnOpts2" label-slot>
+            <q-space />
+            <q-select
+              class="form-node"
+              v-model="editedItem.useYn"
+              :options="useYnOpts2"
+              label-slot
+            >
               <template v-slot:label>
                 <span>사용 구분</span><span class="requiredLabel"> *</span>
               </template>
             </q-select>
-            <q-space/><q-space/><q-space/><q-space/><q-space/><q-space/><q-space/><q-space/><q-space/>  
+            <q-space /><q-space /><q-space /><q-space /><q-space /><q-space /><q-space /><q-space /><q-space />
           </q-card-actions>
 
           <q-card-actions align="right">
@@ -113,35 +155,40 @@
           <q-card-actions align="center">
             <q-btn color="primary" label="CANCEL" @click="closeModal"></q-btn>
             <q-btn color="primary" label="CONFIRM" @click="delteData"></q-btn>
-            <q-btn color="primary" label="CHECK_LIST" @click="checkDeleteItemToggle = !checkDeleteItemToggle"></q-btn>
+            <q-btn
+              color="primary"
+              label="CHECK_LIST"
+              @click="checkDeleteItemToggle = !checkDeleteItemToggle"
+            ></q-btn>
           </q-card-actions>
-          
+
           <q-separator inset />
 
           <q-card-section v-show="checkDeleteItemToggle">
-            {{ deleteItem }}
+            사용자ID : {{ deleteItem }}
           </q-card-section>
         </div>
 
-         <!-- 사용자 목록 조회 모달 -->
+        <!-- 사용자 목록 조회 모달 -->
         <div class="form-container userSearchForm" v-if="userSearch">
-          <UserListSearch @CloseUserListModal="userSearch = false;" @selectedUserId="selectedUserId"></UserListSearch>
+          <UserListSearch
+            @CloseUserListModal="userSearch = false"
+            @selectedUserId="selectedUserId"
+          ></UserListSearch>
         </div>
       </q-card>
     </div>
   </div>
-
- 
 </template>
 
 <script>
-import { api } from 'src/boot/axios';
-import { ref } from 'vue';
-import UserListSearch from './UserListSearch.vue';
+import { api } from "src/boot/axios";
+import { ref } from "vue";
+import UserListSearch from "./UserListSearch.vue";
 
 export default {
-  components:{
-    UserListSearch
+  components: {
+    UserListSearch,
   },
 
   props: {
@@ -156,25 +203,67 @@ export default {
       // 테이블 헤더
       columns: [
         {
-          name: 'index',
-          label: '#',
-          field: 'index'
+          name: "index",
+          label: "#",
+          field: "index",
         },
         {
-          name: 'userId',
+          name: "userId",
           required: true,
-          label: '사용자ID',
-          align: 'center',
-          field: 'userId',
-          sortable: true
+          label: "사용자ID",
+          align: "center",
+          field: "userId",
+          sortable: true,
         },
-        { name: 'roleId', align: 'center', label: '권한 코드', field: 'roleId', sortable: true },
-        { name: 'useYn', align: 'center', label: '사용구분', field: 'useYn', sortable: true },
-        { name: 'updId', align: 'center', label: '수정자', field: 'uptId', sortable: true },
-        { name: 'updDate', align: 'center', label: '수정일자', field: 'uptDate', sortable: true },
-        { name: 'regId', align: 'center', label: '등록자', field: 'regId', sortable: true },
-        { name: 'regDate', align: 'center', label: '등록일자', field: 'regDate', sortable: true },
-        { name: 'edit', align: 'center', label: 'Edit', field: 'edit', sortable: false }
+        {
+          name: "roleId",
+          align: "center",
+          label: "권한 코드",
+          field: "roleId",
+          sortable: true,
+        },
+        {
+          name: "useYn",
+          align: "center",
+          label: "사용구분",
+          field: "useYn",
+          sortable: true,
+        },
+        {
+          name: "uptId",
+          align: "center",
+          label: "수정자",
+          field: "uptId",
+          sortable: true,
+        },
+        {
+          name: "uptDate",
+          align: "center",
+          label: "수정일자",
+          field: "uptDate",
+          sortable: true,
+        },
+        {
+          name: "regId",
+          align: "center",
+          label: "등록자",
+          field: "regId",
+          sortable: true,
+        },
+        {
+          name: "regDate",
+          align: "center",
+          label: "등록일자",
+          field: "regDate",
+          sortable: true,
+        },
+        {
+          name: "edit",
+          align: "center",
+          label: "Edit",
+          field: "edit",
+          sortable: false,
+        },
       ],
 
       // 테이블 데이터
@@ -195,7 +284,7 @@ export default {
       delteFormToggle: false,
       // 삭제 아이템 리스트창 토글
       checkDeleteItemToggle: false,
-      
+
       // 사용자 목록 조회
       userSearch: false,
 
@@ -207,51 +296,51 @@ export default {
         userId: null,
         roleId: this.selectedRoleId,
         useYn: {
-          label: '사용',
-          value: 'Y'
+          label: "사용",
+          value: "Y",
         },
-        addMod: 'A'
+        addMod: "A",
       },
       defaultItem: {
         userId: null,
         roleId: this.selectedRoleId,
         useYn: {
-          label: '사용',
-          value: 'Y'
+          label: "사용",
+          value: "Y",
         },
-        addMod: 'A'
+        addMod: "A",
       },
       useYnOpts2: [
         {
-          label: '사용',
-          value: 'Y'
+          label: "사용",
+          value: "Y",
         },
         {
-          label: '미사용',
-          value: 'N'
+          label: "미사용",
+          value: "N",
         },
       ],
-      
+
       // 검색쿼리
       search: {
         txt: null,
         useYn: {
-          label: '전체',
-          value: null
+          label: "전체",
+          value: null,
         },
       },
-      useYnOpts:[
+      useYnOpts: [
         {
-          label: '전체',
-          value: null
+          label: "전체",
+          value: null,
         },
         {
-          label: '사용',
-          value: 'Y'
+          label: "사용",
+          value: "Y",
         },
         {
-          label: '미사용',
-          value: 'N'
+          label: "미사용",
+          value: "N",
         },
       ],
 
@@ -261,7 +350,7 @@ export default {
         descending: false,
         page: 1,
         rowsPerPage: 20,
-        rowsNumber: 0
+        rowsNumber: 0,
       },
 
       // 모달창 이동
@@ -270,69 +359,73 @@ export default {
       dragStartY: 0,
       modalOffsetX: 0,
       modalOffsetY: 0,
-
-    }
+    };
   },
 
   methods: {
     // 테이블 초기 데이터 세팅
-    setTableData(){
+    setTableData() {
       this.selected = [];
-      
-      const params = {
-          sortBy:  this.pagination.sortBy
-        , descending: (this.pagination.descending === true)? 'dc' : 'ac'
-        , page: this.pagination.page
-        , numOfRows: this.pagination.rowsPerPage
-        , searchTxt: (this.search.txt !== null && this.search.txt !== "")? this.search.txt : null
-        , searchUseYn : this.search.useYn.value
-        , selectedRoleId: this.selectedRoleId
-      }
 
-      api.post("/roleMng/getUserRoleList", params)
-      .then((res) => {
-        this.rows = res.data.data.resList;
-        this.pagination.rowsNumber = res.data.data.total;
-        this.rowsSet();
-      })
-      .catch((err) => {
-        console.log(err);
-      })
+      const params = {
+        sortBy: this.pagination.sortBy,
+        descending: this.pagination.descending === true ? "dc" : "ac",
+        page: this.pagination.page,
+        numOfRows: this.pagination.rowsPerPage,
+        searchTxt:
+          this.search.txt !== null && this.search.txt !== ""
+            ? this.search.txt
+            : null,
+        searchUseYn: this.search.useYn.value,
+        selectedRoleId: this.selectedRoleId,
+      };
+
+      api
+        .post("/roleMng/getUserRoleList", params)
+        .then((res) => {
+          this.rows = res.data.data.resList;
+          this.pagination.rowsNumber = res.data.data.total;
+          this.rowsSet();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
 
     // 데이터에 값 추가
     rowsSet() {
       this.rows.forEach((row, index) => {
-        row.index = index+1;
-        for(const [key, value] of Object.entries(row)){
-          if(`${value}` === 'null'){
-            row[`${key}`] = '-'
+        row.index = index + 1;
+        for (const [key, value] of Object.entries(row)) {
+          if (`${value}` === "null") {
+            row[`${key}`] = "-";
           }
         }
-      })
+      });
     },
 
-    // 수정 버튼 
-    editMethod(item){
+    // 수정 버튼
+    editMethod(item) {
       this.addForm = false;
       this.editedItem = this.$_.cloneDeep(item.row);
-      this.editedItem.addMod = 'M';
-      if(this.editedItem.useYn === 'Y') this.editedItem.useYn = {label: '사용', value: 'Y'}
-      else this.editedItem.useYn = {label: '미사용', value: 'N'}
+      this.editedItem.addMod = "M";
+      if (this.editedItem.useYn === "Y")
+        this.editedItem.useYn = { label: "사용", value: "Y" };
+      else this.editedItem.useYn = { label: "미사용", value: "N" };
       this.formOpen();
     },
 
     // 추가 버튼
     formOpen(event) {
       this.modalToggle = true;
-      this.formToggle = true
+      this.formToggle = true;
     },
 
     // 추가, 수정, 삭제 모달창 닫기
-    closeModal(){
+    closeModal() {
       this.editedItem = this.$_.cloneDeep(this.defaultItem);
       this.deleteItem = [];
-      this.modalToggle = false;    
+      this.modalToggle = false;
       this.formToggle = false;
       this.delteFormToggle = false;
       this.checkDeleteItemToggle = false;
@@ -343,34 +436,35 @@ export default {
     // 추가, 수정된 데이터 저장
     saveData() {
       const userId = this.editedItem.userId;
-      if( (userId === null || userId === "")
-      ){
+      if (userId === null || userId === "") {
         alert("필수 값들을 입력해 주세요.");
-        return
+        return;
       }
 
       this.editedItem.useYn = this.editedItem.useYn.value;
-      
-      api.post("/roleMng/addModUserRole", this.editedItem)
-      .then((res) => {
-        alert('저장완료');
-        this.setTableData();
-        this.closeModal();
-      })
-      .catch((err) => {
-        if(this.editedItem.useYn === 'Y') this.editedItem.useYn = {label: '사용', value: 'Y'}
-        else this.editedItem.useYn = {label: '미사용', value: 'N'}
-        
-        if(err.code === 'ERR_BAD_RESPONSE') alert('같은 역할의 사용자ID가 있습니다.');
-      })
-      
+
+      api
+        .post("/roleMng/addModUserRole", this.editedItem)
+        .then((res) => {
+          alert("저장완료");
+          this.setTableData();
+          this.closeModal();
+        })
+        .catch((err) => {
+          if (this.editedItem.useYn === "Y")
+            this.editedItem.useYn = { label: "사용", value: "Y" };
+          else this.editedItem.useYn = { label: "미사용", value: "N" };
+
+          if (err.code === "ERR_BAD_RESPONSE")
+            alert("같은 역할의 사용자ID가 있습니다.");
+        });
     },
 
     // 삭제 버튼
     removeMethod() {
-      if(this.selected.length === 0){
+      if (this.selected.length === 0) {
         alert("선택된 데이터가 없습니다");
-      } else{
+      } else {
         this.selected.forEach((item) => {
           this.deleteItem.push(item.userId);
         });
@@ -383,21 +477,22 @@ export default {
     delteData() {
       const params = {
         deleteItem: this.deleteItem,
-        roleId: this.selectedRoleId
-      }
-      api.post("/roleMng/delUserRole", params)
-      .then((res) => {
-        alert('삭제완료');
-        this.setTableData();
-        this.closeModal();
-      })
-      .catch((err) => {
-        console.log(err);
-      })
+        roleId: this.selectedRoleId,
+      };
+      api
+        .post("/roleMng/delUserRole", params)
+        .then((res) => {
+          alert("삭제완료");
+          this.setTableData();
+          this.closeModal();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
 
     // 페이지 변화에 따른 작용
-    changePage(){
+    changePage() {
       this.setTableData();
     },
 
@@ -441,7 +536,7 @@ export default {
       document.removeEventListener("mouseup", this.stopDrag);
     },
     // 모달창 가운데 정렬
-    replaceModal(){
+    replaceModal() {
       this.dragStartX = 0;
       this.dragStartY = 0;
       this.modalOffsetX = 0;
@@ -451,26 +546,27 @@ export default {
     },
 
     // roleId 세팅
-    editedItemRoleIdSet(){
+    editedItemRoleIdSet() {
       this.editedItem.roleId = this.selectedRoleId;
     },
 
     // 사용자 목록 조회 모달
-    selectedUserId(userId){
+    selectedUserId(userId) {
       this.editedItem.userId = userId;
-    }
-
+    },
   },
 
   computed: {
     // 페이지 길이
     pageLength() {
-      return Math.ceil(this.pagination.rowsNumber / this.pagination.rowsPerPage) 
+      return Math.ceil(
+        this.pagination.rowsNumber / this.pagination.rowsPerPage
+      );
     },
 
     // 현재 페이지
     curPageSet() {
-      return this.pagination.page
+      return this.pagination.page;
     },
   },
 
@@ -478,20 +574,20 @@ export default {
     this.setTableData();
   },
 
-  updated () {
+  updated() {
     this.setTableData();
     this.editedItemRoleIdSet();
   },
-}
+};
 </script>
 
 <style lang="scss" scoped>
-.main-title{
+.main-title {
   font-size: 50px;
   margin: 0.5%;
 }
 
-.delete-text{
+.delete-text {
   font-size: 30px;
 }
 
@@ -505,7 +601,7 @@ export default {
   z-index: 1000;
 }
 
-  /* dimmed */
+/* dimmed */
 .form-card {
   position: absolute;
   top: 50%;
@@ -525,7 +621,7 @@ export default {
   width: 30%;
 }
 
-.search-section{
+.search-section {
   display: flex;
 }
 
@@ -543,12 +639,11 @@ export default {
   font-size: 1em;
 }
 
-.requiredLabel{
+.requiredLabel {
   color: red;
 }
 
 .userSearchForm {
- width: 70em;
+  width: 70em;
 }
-
 </style>

@@ -1,5 +1,4 @@
 <template>
-
   <div class="main-title">
     {{ mainTitle }}
   </div>
@@ -8,7 +7,8 @@
     <q-card-section>
       <!-- 테이블 -->
       <q-table
-        flat bordered
+        flat
+        bordered
         title="Treats"
         :rows="rows"
         :columns="columns"
@@ -21,25 +21,48 @@
         :rows-per-page-options="[20]"
         @row-click="rowClick"
       >
-
         <!-- 탑 버튼 -->
         <template v-slot:top>
-          <q-card style="width:100%">
+          <q-card style="width: 100%">
             <!-- 검색 영역 -->
             <q-card-section class="search-section">
-              <q-select class="search-select" v-model="search.opt" :options="searchOpts" label="검색 조건" />
+              <q-select
+                class="search-select"
+                v-model="search.opt"
+                :options="searchOpts"
+                label="검색 조건"
+              />
               &nbsp;&nbsp;&nbsp;
-              <q-input class="search-input" color="primary" label="검색" v-model="search.txt" @keyup.enter="setTableData()"/>
+              <q-input
+                class="search-input"
+                color="primary"
+                label="검색"
+                v-model="search.txt"
+                @keyup.enter="setTableData()"
+              />
               &nbsp;&nbsp;&nbsp;
-              <q-select class="search-select2" v-model="search.useYn" :options="useYnOpts" label="사용 유무" />
+              <q-select
+                class="search-select2"
+                v-model="search.useYn"
+                :options="useYnOpts"
+                label="사용 유무"
+              />
             </q-card-section>
 
             <!-- 검색, 추가, 삭제 버튼 -->
-            <q-card-actions align='right'>
-              <q-btn color="primary" label="Search" @click="setTableData()"></q-btn>
+            <q-card-actions align="right">
+              <q-btn
+                color="primary"
+                label="Search"
+                @click="setTableData()"
+              ></q-btn>
               <q-space />
               <q-btn color="primary" label="Add" @click="formOpen()"></q-btn>
-              <q-btn color="primary" label="Remove" @click="removeMethod"></q-btn>
+              <q-btn
+                color="primary"
+                label="Remove"
+                @click="removeMethod"
+              ></q-btn>
             </q-card-actions>
           </q-card>
         </template>
@@ -48,7 +71,12 @@
         <template v-slot:body-cell-edit="item">
           <q-td :props="item">
             <div>
-              <q-icon name="edit" size="1.5em" @click="editMethod(item)" style="cursor: pointer;"></q-icon>
+              <q-icon
+                name="edit"
+                size="1.5em"
+                @click="editMethod(item)"
+                style="cursor: pointer"
+              ></q-icon>
             </div>
           </q-td>
         </template>
@@ -67,7 +95,6 @@
             @update:model-value="changePage"
           />
         </template>
-
       </q-table>
     </q-card-section>
   </q-card>
@@ -78,30 +105,40 @@
       <q-card v-show="modalToggle" @mousedown="startDrag">
         <div class="form-container" v-show="formToggle">
           <q-card-actions>
-            <q-input class="form-node" v-model="editedItem.roleId" label-slot :readonly="readonly">
+            <q-input
+              class="form-node"
+              v-model="editedItem.roleId"
+              label-slot
+              :readonly="readonly"
+              placeholder="ROLE_"
+            >
               <template v-slot:label>
                 <span>권한 코드</span><span class="requiredLabel"> *</span>
               </template>
             </q-input>
-            <q-space/>
+            <q-space />
             <q-input class="form-node" v-model="editedItem.roleNm" label-slot>
               <template v-slot:label>
                 <span>권한명</span><span class="requiredLabel"> *</span>
               </template>
             </q-input>
-            <q-space/>
+            <q-space />
             <q-input class="form-node" v-model="editedItem.roleDesc" label-slot>
               <template v-slot:label>
                 <span>권한 설명</span><span class="requiredLabel"> *</span>
               </template>
             </q-input>
 
-            <q-select class="form-node" v-model="editedItem.useYn" :options="useYnOpts2" label-slot>
+            <q-select
+              class="form-node"
+              v-model="editedItem.useYn"
+              :options="useYnOpts2"
+              label-slot
+            >
               <template v-slot:label>
                 <span>사용 구분</span><span class="requiredLabel"> *</span>
               </template>
             </q-select>
-            
           </q-card-actions>
 
           <q-card-actions align="right">
@@ -117,23 +154,26 @@
           <q-card-actions align="center">
             <q-btn color="primary" label="CANCEL" @click="closeModal"></q-btn>
             <q-btn color="primary" label="CONFIRM" @click="delteData"></q-btn>
-            <q-btn color="primary" label="CHECK_LIST" @click="checkDeleteItemToggle = !checkDeleteItemToggle"></q-btn>
+            <q-btn
+              color="primary"
+              label="CHECK_LIST"
+              @click="checkDeleteItemToggle = !checkDeleteItemToggle"
+            ></q-btn>
           </q-card-actions>
-          
+
           <q-separator inset />
 
           <q-card-section v-show="checkDeleteItemToggle">
-            {{ deleteItem }}
+            권한코드 : {{ deleteItem }}
           </q-card-section>
         </div>
       </q-card>
     </div>
   </div>
-
 </template>
 
 <script>
-import { api } from 'src/boot/axios';
+import { api } from "src/boot/axios";
 
 export default {
   data() {
@@ -144,26 +184,74 @@ export default {
       // 테이블 헤더
       columns: [
         {
-          name: 'index',
-          label: '#',
-          field: 'index'
+          name: "index",
+          label: "#",
+          field: "index",
         },
         {
-          name: 'roleId',
+          name: "roleId",
           required: true,
-          label: '권한 코드',
-          align: 'center',
-          field: 'roleId',
-          sortable: true
+          label: "권한 코드",
+          align: "center",
+          field: "roleId",
+          sortable: true,
         },
-        { name: 'roleNm', align: 'center', label: '권한명', field: 'roleNm', sortable: true },
-        { name: 'roleDesc', align: 'center', label: '권한 설명', field: 'roleDesc', sortable: true },
-        { name: 'useYn', align: 'center', label: '사용구분', field: 'useYn', sortable: true },
-        { name: 'uptId', align: 'center', label: '수정자', field: 'uptId', sortable: true },
-        { name: 'uptDate', align: 'center', label: '수정일자', field: 'uptDate', sortable: true },
-        { name: 'regId', align: 'center', label: '등록자', field: 'regId', sortable: true },
-        { name: 'regDate', align: 'center', label: '등록일자', field: 'regDate', sortable: true },
-        { name: 'edit', align: 'center', label: 'Edit', field: 'edit', sortable: false }
+        {
+          name: "roleNm",
+          align: "center",
+          label: "권한명",
+          field: "roleNm",
+          sortable: true,
+        },
+        {
+          name: "roleDesc",
+          align: "center",
+          label: "권한 설명",
+          field: "roleDesc",
+          sortable: true,
+        },
+        {
+          name: "useYn",
+          align: "center",
+          label: "사용구분",
+          field: "useYn",
+          sortable: true,
+        },
+        {
+          name: "uptId",
+          align: "center",
+          label: "수정자",
+          field: "uptId",
+          sortable: true,
+        },
+        {
+          name: "uptDate",
+          align: "center",
+          label: "수정일자",
+          field: "uptDate",
+          sortable: true,
+        },
+        {
+          name: "regId",
+          align: "center",
+          label: "등록자",
+          field: "regId",
+          sortable: true,
+        },
+        {
+          name: "regDate",
+          align: "center",
+          label: "등록일자",
+          field: "regDate",
+          sortable: true,
+        },
+        {
+          name: "edit",
+          align: "center",
+          label: "Edit",
+          field: "edit",
+          sortable: false,
+        },
       ],
 
       // 테이블 데이터
@@ -191,30 +279,30 @@ export default {
         roleNm: null,
         roleDesc: null,
         useYn: {
-          label: '사용',
-          value: 'Y'
+          label: "사용",
+          value: "Y",
         },
-        addMod: 'A'
+        addMod: "A",
       },
       defaultItem: {
         roleId: null,
         roleNm: null,
         roleDesc: null,
         useYn: {
-          label: '사용',
-          value: 'Y'
+          label: "사용",
+          value: "Y",
         },
-        addMod: 'A'
+        addMod: "A",
       },
       readonly: false,
       useYnOpts2: [
         {
-          label: '사용',
-          value: 'Y'
+          label: "사용",
+          value: "Y",
         },
         {
-          label: '미사용',
-          value: 'N'
+          label: "미사용",
+          value: "N",
         },
       ],
 
@@ -222,44 +310,44 @@ export default {
       search: {
         txt: null,
         opt: {
-          label: '검색항목 선택',
-          value: null
+          label: "검색항목 선택",
+          value: null,
         },
         useYn: {
-          label: '전체',
-          value: null
+          label: "전체",
+          value: null,
         },
       },
       searchOpts: [
         {
-          label: '검색항목 선택',
-          value: null
+          label: "검색항목 선택",
+          value: null,
         },
         {
-          label: '권한 코드',
-          value: 'roleId'
+          label: "권한 코드",
+          value: "roleId",
         },
         {
-          label: '권한명',
-          value: 'roleNm'
+          label: "권한명",
+          value: "roleNm",
         },
         {
-          label: '권한 설명',
-          value: 'roleDesc'
+          label: "권한 설명",
+          value: "roleDesc",
         },
       ],
-      useYnOpts:[
+      useYnOpts: [
         {
-          label: '전체',
-          value: null
+          label: "전체",
+          value: null,
         },
         {
-          label: '사용',
-          value: 'Y'
+          label: "사용",
+          value: "Y",
         },
         {
-          label: '미사용',
-          value: 'N'
+          label: "미사용",
+          value: "N",
         },
       ],
 
@@ -269,7 +357,7 @@ export default {
         descending: false,
         page: 1,
         rowsPerPage: 20,
-        rowsNumber: 0
+        rowsNumber: 0,
       },
 
       // 모달창 이동
@@ -278,55 +366,59 @@ export default {
       dragStartY: 0,
       modalOffsetX: 0,
       modalOffsetY: 0,
-
-    }
+    };
   },
 
   methods: {
     // 테이블 초기 데이터 세팅
-    setTableData(){
+    setTableData() {
       this.selected = [];
 
       const params = {
-          sortBy:  this.pagination.sortBy
-        , descending: (this.pagination.descending === true)? 'dc' : 'ac'
-        , page: this.pagination.page
-        , numOfRows: this.pagination.rowsPerPage
-        , searchTxt: (this.search.txt !== null && this.search.txt !== "")? this.search.txt : null
-        , searchOpt : this.search.opt.value
-        , searchUseYn : this.search.useYn.value
-      }
+        sortBy: this.pagination.sortBy,
+        descending: this.pagination.descending === true ? "dc" : "ac",
+        page: this.pagination.page,
+        numOfRows: this.pagination.rowsPerPage,
+        searchTxt:
+          this.search.txt !== null && this.search.txt !== ""
+            ? this.search.txt
+            : null,
+        searchOpt: this.search.opt.value,
+        searchUseYn: this.search.useYn.value,
+      };
 
-      api.post("/roleMng/getRoleList", params)
-      .then((res) => {
-        this.rows = res.data.data.resList;
-        this.pagination.rowsNumber = res.data.data.total;
-        this.rowsSet();
-      })
-      .catch((err) => {
-        console.log(err);
-      })
+      api
+        .post("/roleMng/getRoleList", params)
+        .then((res) => {
+          this.rows = res.data.data.resList;
+          this.pagination.rowsNumber = res.data.data.total;
+          this.rowsSet();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
 
     // 데이터에 값 추가
     rowsSet() {
       this.rows.forEach((row, index) => {
-        row.index = index+1;
-        for(const [key, value] of Object.entries(row)){
-          if(`${value}` === 'null'){
-            row[`${key}`] = '-'
-          } 
+        row.index = index + 1;
+        for (const [key, value] of Object.entries(row)) {
+          if (`${value}` === "null") {
+            row[`${key}`] = "-";
+          }
         }
-      })
+      });
     },
 
-    // 수정 버튼 
-    editMethod(item){
+    // 수정 버튼
+    editMethod(item) {
       this.editedItem = this.$_.cloneDeep(item.row);
       this.readonly = true;
-      this.editedItem.addMod = 'M';
-      if(this.editedItem.useYn === 'Y') this.editedItem.useYn = {label: '사용', value: 'Y'}
-      else this.editedItem.useYn = {label: '미사용', value: 'N'}
+      this.editedItem.addMod = "M";
+      if (this.editedItem.useYn === "Y")
+        this.editedItem.useYn = { label: "사용", value: "Y" };
+      else this.editedItem.useYn = { label: "미사용", value: "N" };
       this.formOpen();
     },
 
@@ -337,11 +429,11 @@ export default {
     },
 
     // 추가, 수정, 삭제 모달창 닫기
-    closeModal(){
+    closeModal() {
       this.editedItem = this.$_.cloneDeep(this.defaultItem);
       this.deleteItem = [];
-      this.readonly = false;  
-      this.modalToggle = false;    
+      this.readonly = false;
+      this.modalToggle = false;
       this.formToggle = false;
       this.delteFormToggle = false;
       this.checkDeleteItemToggle = false;
@@ -353,36 +445,42 @@ export default {
       const roleId = this.editedItem.roleId;
       const roleNm = this.editedItem.roleNm;
       const roleDesc = this.editedItem.roleDesc;
-      if( (roleId === null || roleId === "")
-        || (roleNm === null || roleNm === "")
-        || (roleDesc === null || roleDesc === "")
-      ){
+      if (
+        roleId === null ||
+        roleId === "" ||
+        roleNm === null ||
+        roleNm === "" ||
+        roleDesc === null ||
+        roleDesc === ""
+      ) {
         alert("필수 값들을 입력해 주세요.");
-        return
+        return;
       }
 
       this.editedItem.useYn = this.editedItem.useYn.value;
-      
-      api.post("/roleMng/roleAddMod", this.editedItem)
-      .then((res) => {
-        alert('저장완료');
-        this.setTableData();
-        this.closeModal();
-      })
-      .catch((err) => {
-        if(this.editedItem.useYn === 'Y') this.editedItem.useYn = {label: '사용', value: 'Y'}
-        else this.editedItem.useYn = {label: '미사용', value: 'N'}
-        
-        if(err.code === 'ERR_BAD_RESPONSE') alert('이미 중복된 권한코드가 있습니다.');
-      })
-      
+
+      api
+        .post("/roleMng/roleAddMod", this.editedItem)
+        .then((res) => {
+          alert("저장완료");
+          this.setTableData();
+          this.closeModal();
+        })
+        .catch((err) => {
+          if (this.editedItem.useYn === "Y")
+            this.editedItem.useYn = { label: "사용", value: "Y" };
+          else this.editedItem.useYn = { label: "미사용", value: "N" };
+
+          if (err.code === "ERR_BAD_RESPONSE")
+            alert("이미 중복된 권한코드가 있습니다.");
+        });
     },
 
     // 삭제 버튼
     removeMethod() {
-      if(this.selected.length === 0){
+      if (this.selected.length === 0) {
         alert("선택된 데이터가 없습니다");
-      } else{
+      } else {
         this.selected.forEach((item) => {
           this.deleteItem.push(item.roleId);
         });
@@ -393,19 +491,20 @@ export default {
 
     // 삭제 확인
     delteData() {
-      api.post("/roleMng/roleDel", this.deleteItem)
-      .then((res) => {
-        alert('삭제완료');
-        this.setTableData();
-        this.closeModal();
-      })
-      .catch((err) => {
-        console.log(err);
-      })
+      api
+        .post("/roleMng/roleDel", this.deleteItem)
+        .then((res) => {
+          alert("삭제완료");
+          this.setTableData();
+          this.closeModal();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
 
     // 페이지 변화에 따른 작용
-    changePage(){
+    changePage() {
       this.setTableData();
     },
 
@@ -449,7 +548,7 @@ export default {
       document.removeEventListener("mouseup", this.stopDrag);
     },
     // 모달창 가운데 정렬
-    replaceModal(){
+    replaceModal() {
       this.dragStartX = 0;
       this.dragStartY = 0;
       this.modalOffsetX = 0;
@@ -459,36 +558,38 @@ export default {
     },
 
     // 행 클릭 이벤트
-    rowClick(evt, row, index){
+    rowClick(evt, row, index) {
       this.$emit("rowClick", row.roleId);
-    }
+    },
   },
 
   computed: {
     // 페이지 길이
     pageLength() {
-      return Math.ceil(this.pagination.rowsNumber / this.pagination.rowsPerPage) 
+      return Math.ceil(
+        this.pagination.rowsNumber / this.pagination.rowsPerPage
+      );
     },
 
     // 현재 페이지
     curPageSet() {
-      return this.pagination.page
-    }
+      return this.pagination.page;
+    },
   },
 
-  created () {
+  created() {
     this.setTableData();
   },
-}
+};
 </script>
 
 <style lang="scss" scoped>
-.main-title{
+.main-title {
   font-size: 50px;
   margin: 0.5%;
 }
 
-.delete-text{
+.delete-text {
   font-size: 30px;
 }
 
@@ -502,7 +603,7 @@ export default {
   z-index: 1000;
 }
 
-  /* dimmed */
+/* dimmed */
 .form-card {
   position: absolute;
   top: 50%;
@@ -522,7 +623,7 @@ export default {
   width: 30%;
 }
 
-.search-section{
+.search-section {
   display: flex;
 }
 
@@ -540,7 +641,7 @@ export default {
   font-size: 1em;
 }
 
-.requiredLabel{
+.requiredLabel {
   color: red;
 }
 </style>

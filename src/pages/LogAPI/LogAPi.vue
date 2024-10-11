@@ -179,7 +179,7 @@ export default {
           align: "center",
           label: "SQL",
           field: "sqlTxt",
-          sortable: true,
+          sortable: false,
           headerStyle: "width:25%",
         },
         {
@@ -187,7 +187,7 @@ export default {
           align: "center",
           label: "파라미터",
           field: "params",
-          sortable: true,
+          sortable: false,
           headerStyle: "width:20%",
         },
         {
