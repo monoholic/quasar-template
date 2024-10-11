@@ -296,7 +296,7 @@ export default {
         alert("업로드에 성공했습니다.");
       } catch (error) {
         console.error("Error uploading data:", error);
-        alert("업로드에 실패했습니다.");
+        alert("업로드에 실패했습니다. \n실패 사유: " + error.response.data);
       }
 
       this.closeModal();
