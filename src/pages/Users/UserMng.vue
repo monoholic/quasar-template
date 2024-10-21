@@ -166,9 +166,10 @@
               hide-hint
             />
             <q-space />
-            <q-input
+            <q-select
               class="form-node"
               v-model="editedItem.gender"
+              :options="genderOpt"
               label="성별"
               hint=""
             />
@@ -180,9 +181,10 @@
               hint=""
             />
             <q-space />
-            <q-input
+            <q-select
               class="form-node"
               v-model="editedItem.jikgyub"
+              :options="jikgyubOpt"
               label="직급"
               hint=""
             />
@@ -251,6 +253,7 @@
 
 <script>
 import { api } from "src/boot/axios";
+import { getCodeOpt } from "/src/js/index.js";
 
 export default {
   data() {
@@ -382,6 +385,11 @@ export default {
       // 삭제 아이템
       deleteItem: [],
 
+      // 부서 목록 opt
+      jikgyubOpt: [],
+      // 성별 목록 opt
+      genderOpt: [],
+
       // 모달창 토글
       modalToggle: false,
 
@@ -402,10 +410,13 @@ export default {
         userId: null,
         userNm: null,
         deptNm: null,
-        jikgyub: null,
+        jikgyub: {
+          label: "인턴",
+          value: "90",
+        },
         email: null,
         telNo: null,
-        gender: null,
+        gender: "F",
         useYn: {
           label: "사용",
           value: "Y",
@@ -417,10 +428,13 @@ export default {
         userId: null,
         userNm: null,
         deptNm: null,
-        jikgyub: null,
+        jikgyub: {
+          label: "인턴",
+          value: "90",
+        },
         email: null,
         telNo: null,
-        gender: null,
+        gender: "F",
         useYn: {
           label: "사용",
           value: "Y",
@@ -590,7 +604,13 @@ export default {
         return;
       }
 
+      // 옵션창들 value값 넣기
       this.editedItem.useYn = this.editedItem.useYn.value;
+      this.jikgyubOpt.forEach((item) => {
+        if (item.codeNm === this.editedItem.jikgyub)
+          this.editedItem.jikgyub = item;
+      });
+      this.editedItem.jikgyub = this.editedItem.jikgyub.value;
 
       // 서버통신
       api
@@ -736,6 +756,25 @@ export default {
       const formCard = this.$refs.formCard;
       formCard.style.transform = `translate(0px, 0px)`;
     },
+
+    // opt 세팅
+    async optSetting() {
+      // 직급
+      const jikgyubOpt = await getCodeOpt("USER_CLPST");
+      jikgyubOpt.forEach((item) => {
+        const obj = {
+          label: item.codeNm,
+          value: item.codeId,
+        };
+        this.jikgyubOpt.push(obj);
+      });
+
+      // 성별
+      const gender = await getCodeOpt("GENDER");
+      gender.forEach((item) => {
+        this.genderOpt.push(item.codeId);
+      });
+    },
   },
 
   computed: {
@@ -793,6 +832,7 @@ export default {
   },
 
   created() {
+    this.optSetting();
     this.setTableData();
   },
 };

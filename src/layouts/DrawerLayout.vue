@@ -91,6 +91,7 @@ export default {
     };
 
     const pageMove = (pagePath) => {
+      console.log(typeof pagePath);
       api
         .post("/logManage/addLog", pagePath)
         .then((res) => {
