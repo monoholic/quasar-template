@@ -13,12 +13,12 @@ const routes = [
   {
     name: "/approval",
     path: "/approval",
-    component: () => import("layouts/ApprovalLayout.vue"),
+    component: () => import("/src/pages/Approval/ApprovalLayout.vue"),
   },
   {
     name: "/receiveApproval",
     path: "/receiveApproval",
-    component: () => import("layouts/ReceiveApprLayout.vue"),
+    component: () => import("/src/pages/Approval/ReceiveAppvLayout.vue"),
   },
   {
     name: "/commonCode",
