@@ -405,7 +405,7 @@ export default {
             params.email = data[i].email;
           }
           console.log("mail ===> " + params.email);
-          //this.sendMail(params);
+          this.sendMail(params);
         })
         .catch((err) => {
           console.log(err);
