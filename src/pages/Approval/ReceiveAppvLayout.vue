@@ -371,7 +371,6 @@ export default {
         return;
       }
       const params = {
-        appvId: "testUser",
         appvUserId: editItem.appvUserId.value,
         appvType: editItem.appvType,
         appvTtl: editItem.appvTtl,
@@ -388,11 +387,46 @@ export default {
       // 서버통신
       api
         .post("/receiveApproval/addApproval", params)
-        .then((res) => {
+        .then(() => {
           alert("결재가 등록되었습니다.");
-          // 메일 상신 기능 제작 필요 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
           this.setTableData();
           this.closeModal();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
+      // 수신자 메일 조회
+      api
+        .post("/receiveApproval/mailAddress", params)
+        .then((res) => {
+          const data = res.data.data;
+          for (let i = 0; i < data.length; i++) {
+            params.email = data[i].email;
+          }
+          console.log("mail ===> " + params.email);
+          //this.sendMail(params);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+
+    // 메일 발송
+    sendMail(params) {
+      const data = {
+        address: params.email,
+        title: params.appvTtl,
+        content: "안녕하세요.\n" + params.appvTtl + "건 승인 부탁드립니다.\n\n",
+      };
+      console.log(
+        "data === >" + data.address + "/" + data.title + "/" + data.content
+      );
+
+      api
+        .post("/receiveApproval/sendMail", data)
+        .then(() => {
+          console.log("메일 발송 성공");
         })
         .catch((err) => {
           console.log(err);
