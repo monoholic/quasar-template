@@ -18,8 +18,16 @@
       side="left"
       show-if-above
       bordered
-      v-if="showMenu"
     >
+    <!-- 
+    //로그인 이슈로 v-if구문 삭제
+    <q-drawer
+      v-model="leftDrawerOpen"
+      side="left"
+      show-if-above
+      bordered
+      v-if="showMenu"
+    > -->
       <DrawerLayout />
     </q-drawer>
 
@@ -46,7 +54,9 @@ export default {
 
   methods: {
     toggleLeftDrawer() {
+      console.log('====== > ',this.leftDrawerOpen);
       this.leftDrawerOpen = !this.leftDrawerOpen;
+      this.showMenu = !this.showMenu;
     },
     pageMove() {
       this.$router.push("/login");
